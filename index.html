@@ -39,11 +39,13 @@
             --transition-fast: 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
             --transition-normal: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
             --transition-slow: 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
-            --glass-bg: rgba(255, 255, 255, 0.55);
-            --glass-border: rgba(255, 255, 255, 0.45);
-            --glass-blur: blur(40px) saturate(180%);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-            --liquid-shine: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.25) 100%);
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-blur: blur(60px) saturate(200%);
+            --glass-shadow: 0 8px 40px rgba(0, 0, 0, 0.07), 0 2px 12px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -1px 0 rgba(255, 255, 255, 0.2);
+            --liquid-shine: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.05) 40%, rgba(255,255,255,0.3) 70%, rgba(255,255,255,0.1) 100%);
+            --liquid-refraction: linear-gradient(160deg, rgba(0,122,255,0.03) 0%, transparent 30%, rgba(94,92,230,0.02) 60%, transparent 100%);
+            --liquid-edge: 1px solid rgba(255, 255, 255, 0.6);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -52,6 +54,10 @@
         body {
             font-family: var(--font-family);
             background-color: var(--bg-color);
+            background-image:
+                radial-gradient(ellipse 80% 60% at 20% 10%, rgba(0, 122, 255, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 50% at 80% 80%, rgba(94, 92, 230, 0.05) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 40% at 50% 50%, rgba(255, 159, 10, 0.03) 0%, transparent 60%);
             color: var(--text-primary);
             line-height: 1.6;
             min-height: 100vh;
@@ -505,14 +511,27 @@
             justify-content: center;
             gap: 4px;
             margin-bottom: 28px;
-            padding: 6px;
-            background: var(--glass-bg);
+            padding: 5px;
+            background:
+                var(--liquid-shine),
+                var(--glass-bg);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border-radius: var(--radius);
             box-shadow: var(--glass-shadow);
-            border: 1px solid var(--glass-border);
+            border: var(--liquid-edge);
             overflow-x: auto;
+            position: relative;
+        }
+
+        .tabs::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 50%;
+            border-radius: var(--radius) var(--radius) 0 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+            pointer-events: none;
         }
 
         .tab {
@@ -549,19 +568,35 @@
         }
 
         .card {
-            background: var(--glass-bg);
+            background:
+                var(--liquid-shine),
+                var(--liquid-refraction),
+                var(--glass-bg);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border-radius: var(--radius);
             box-shadow: var(--glass-shadow);
-            border: 1px solid var(--glass-border);
+            border: var(--liquid-edge);
             padding: 24px;
             margin-bottom: 16px;
             transition: all var(--transition-normal);
+            position: relative;
         }
 
-        .card:hover { box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6); }
-        .card:focus-within { box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2), var(--glass-shadow); border-color: rgba(0, 122, 255, 0.3); }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 50%;
+            border-radius: var(--radius) var(--radius) 0 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .card > * { position: relative; z-index: 1; }
+        .card:hover { box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1), 0 4px 16px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -1px 0 rgba(255, 255, 255, 0.2); }
+        .card:focus-within { box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2), var(--glass-shadow); border-color: rgba(0, 122, 255, 0.4); }
 
         .question-nav {
             display: flex;
@@ -569,12 +604,14 @@
             justify-content: space-between;
             margin-bottom: 20px;
             padding: 12px;
-            background: var(--glass-bg);
+            background:
+                var(--liquid-shine),
+                var(--glass-bg);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border-radius: var(--radius-sm);
             box-shadow: var(--glass-shadow);
-            border: 1px solid var(--glass-border);
+            border: var(--liquid-edge);
         }
 
         .question-nav-info {
@@ -657,12 +694,14 @@
 
         .btn-primary:hover { background-color: var(--primary-hover); box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25); }
         .btn-secondary {
-            background: var(--glass-bg);
+            background:
+                var(--liquid-shine),
+                var(--glass-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             color: var(--text-primary);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+            border: var(--liquid-edge);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255,255,255,0.5);
         }
 
         .btn:disabled {
@@ -683,16 +722,20 @@
         .btn-block { width: 100%; }
 
         .results-card {
-            background: var(--glass-bg);
+            background:
+                var(--liquid-shine),
+                var(--liquid-refraction),
+                var(--glass-bg);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border-radius: var(--radius);
             box-shadow: var(--glass-shadow);
-            border: 1px solid var(--glass-border);
+            border: var(--liquid-edge);
             padding: 0;
             margin-top: 20px;
             display: none;
             overflow: hidden;
+            position: relative;
         }
 
         .results-card.show { display: block; }
@@ -979,11 +1022,14 @@
         }
 
         .question-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background:
+                var(--liquid-shine),
+                var(--liquid-refraction),
+                var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
             border-radius: var(--radius);
-            border: 1px solid var(--glass-border);
+            border: var(--liquid-edge);
             padding: 20px;
             cursor: pointer;
             transition: all var(--transition-normal);
@@ -991,11 +1037,23 @@
             flex-direction: column;
             justify-content: space-between;
             box-shadow: var(--glass-shadow);
+            position: relative;
         }
 
+        .question-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 40%;
+            border-radius: var(--radius) var(--radius) 0 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .question-card > * { position: relative; z-index: 1; }
         .question-card:hover {
-            border-color: rgba(0, 122, 255, 0.2);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            border-color: rgba(0, 122, 255, 0.3);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1), 0 4px 16px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.7);
             transform: translateY(-2px);
         }
 
@@ -1032,16 +1090,19 @@
         }
 
         .diff-bar {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background:
+                var(--liquid-shine),
+                var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
             border-radius: var(--radius);
-            border: 1px solid var(--glass-border);
+            border: var(--liquid-edge);
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: var(--glass-shadow);
             overflow-x: auto;
             white-space: nowrap;
+            position: relative;
         }
 
         .diff-bar-header {
@@ -1140,18 +1201,33 @@
         }
 
         .answer-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background:
+                var(--liquid-shine),
+                var(--liquid-refraction),
+                var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
             border-radius: var(--radius);
-            border: 1px solid var(--glass-border);
+            border: var(--liquid-edge);
             padding: 20px;
             box-shadow: var(--glass-shadow);
             transition: all 0.2s ease;
+            position: relative;
         }
 
+        .answer-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 40%;
+            border-radius: var(--radius) var(--radius) 0 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .answer-card > * { position: relative; z-index: 1; }
         .answer-card:hover {
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1), 0 4px 16px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.7);
             transform: translateY(-1px);
         }
 
@@ -1287,12 +1363,14 @@
         }
 
         .flashcard-back {
-            background: var(--glass-bg);
+            background:
+                var(--liquid-shine),
+                var(--glass-bg);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             color: var(--text-primary);
             transform: rotateY(180deg);
-            border: 1px solid var(--glass-border);
+            border: var(--liquid-edge);
             box-shadow: var(--glass-shadow);
         }
 
@@ -1338,17 +1416,32 @@
         .modal-overlay.show { display: flex; }
 
         .modal {
-            background: rgba(255, 255, 255, 0.85);
+            background:
+                var(--liquid-shine),
+                rgba(255, 255, 255, 0.8);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border-radius: var(--radius);
-            box-shadow: var(--glass-shadow), 0 24px 64px rgba(0, 0, 0, 0.12);
-            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow), 0 24px 64px rgba(0, 0, 0, 0.14);
+            border: var(--liquid-edge);
             width: 100%;
             max-width: 480px;
             padding: 24px;
-            animation: slideUp 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            animation: slideUp 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+            position: relative;
         }
+
+        .modal::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 50%;
+            border-radius: var(--radius) var(--radius) 0 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .modal > * { position: relative; z-index: 1; }
 
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(20px) scale(0.97); }
@@ -1488,14 +1581,177 @@
             opacity: 1;
         }
 
+        /* ========== TABLET (768px) ========== */
         @media (max-width: 768px) {
-            .tabs { flex-wrap: wrap; }
-            .tab { flex: none; min-width: auto; }
+            .app-container { padding: 16px 12px; }
+            .header h1 { font-size: 28px; }
+            .header-content { gap: 12px; }
+            .tabs { gap: 3px; padding: 4px; margin-bottom: 20px; }
+            .tab { min-width: 80px; padding: 9px 14px; font-size: 13px; gap: 4px; }
+            .question-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .add-word-form { grid-template-columns: 1fr; }
-            .vocab-item { flex-direction: column; }
-            .vocab-actions { flex-direction: row; }
+            .answer-cards { grid-template-columns: 1fr; }
+            .diff-bar { padding: 16px; }
+            .flashcard-container { max-width: 420px; }
+        }
+
+        /* ========== MOBILE (480px) ========== */
+        @media (max-width: 480px) {
+            .app-container { padding: 12px 10px; }
+
+            /* Header */
+            .header { margin-bottom: 20px; }
+            .header-content { flex-direction: column; align-items: stretch; gap: 12px; }
+            .header-text { text-align: center; }
+            .header-logo { font-size: 32px; margin-bottom: 4px; }
+            .header h1 { font-size: 24px; letter-spacing: -0.3px; }
+            .header p { font-size: 13px; }
+
+            /* Theme toggle */
+            #themeToggle, #langToggleBtn {
+                align-self: center;
+                width: fit-content;
+                padding: 8px 16px;
+                font-size: 13px;
+            }
+
+            /* Tabs - horizontal scroll, no wrap */
+            .tabs {
+                gap: 2px;
+                padding: 4px;
+                margin-bottom: 16px;
+                border-radius: 16px;
+                justify-content: flex-start;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .tabs::-webkit-scrollbar { display: none; }
+            .tab {
+                flex: 0 0 auto;
+                min-width: 0;
+                padding: 8px 14px;
+                font-size: 12px;
+                border-radius: 12px;
+                gap: 3px;
+                white-space: nowrap;
+            }
+            .tab span:first-child { font-size: 14px; }
+
+            /* Cards */
+            .card { padding: 16px; border-radius: 16px; margin-bottom: 12px; }
+            .card-header { gap: 8px; margin-bottom: 12px; }
+            .card-icon { width: 28px; height: 28px; border-radius: 8px; font-size: 14px; }
+            .card-title { font-size: 15px; }
+            .card-subtitle { font-size: 12px; }
+
+            /* Question nav */
+            .question-nav { padding: 10px; margin-bottom: 16px; border-radius: 12px; }
+            .question-nav-info { font-size: 14px; }
+
+            /* Question grid */
+            .question-grid {
+                grid-template-columns: 1fr;
+                max-height: none;
+                overflow-y: visible;
+                gap: 12px;
+            }
+            .question-card { padding: 16px; border-radius: 16px; }
+            .question-card-title { font-size: 14px; -webkit-line-clamp: 2; }
+            .question-card-actions { margin-top: 10px; padding-top: 10px; gap: 6px; }
+            .question-card-actions .btn { font-size: 12px; padding: 6px 10px; }
+
+            /* Buttons */
+            .btn { padding: 10px 16px; font-size: 14px; border-radius: 10px; gap: 4px; }
+            .btn-sm { padding: 6px 10px; font-size: 12px; border-radius: 8px; }
+            .btn-block { width: 100%; }
+
+            /* Input / textarea */
+            input[type="text"], textarea, select {
+                padding: 12px 14px;
+                font-size: 16px; /* Prevents iOS zoom */
+                border-radius: 12px;
+            }
+            textarea { min-height: 80px; }
+
+            /* Results */
+            .results-card { border-radius: 16px; }
+            .results-header { padding: 16px; }
+            .results-header-top { margin-bottom: 12px; }
+            .results-header-top > div:first-child { font-size: 14px; }
+            .results-content { padding: 16px; }
+            .score-badge { font-size: 12px; padding: 4px 10px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .stat-item { padding: 8px; border-radius: 12px; }
+            .stat-value { font-size: 18px; }
+            .stat-label { font-size: 10px; }
+
+            /* Diff */
+            .diff-bar { padding: 14px; border-radius: 16px; margin-bottom: 16px; white-space: normal; overflow-x: visible; }
+            .diff-tokens { gap: 4px; }
+            .diff-token { padding: 4px 7px; font-size: 13px; border-radius: 6px; }
+            .diff-container { padding: 12px 14px; border-radius: 12px; }
+            .diff-text { font-size: 13px; line-height: 1.7; }
+            .legend { gap: 10px; margin-top: 16px; padding-top: 16px; flex-wrap: wrap; }
+            .legend-item { font-size: 11px; }
+            .legend-color { width: 14px; height: 14px; font-size: 8px; }
+
+            /* Answer cards */
+            .answer-cards { gap: 12px; }
+            .answer-card { padding: 16px; border-radius: 16px; }
+            .answer-card-header { gap: 6px; margin-bottom: 12px; padding-bottom: 10px; }
+            .answer-card-icon { width: 24px; height: 24px; border-radius: 6px; font-size: 12px; }
+            .answer-card-title { font-size: 14px; }
+            .answer-card-content { font-size: 14px; line-height: 1.6; }
+
+            /* History */
+            .history-item { padding: 12px; border-radius: 12px; margin-bottom: 10px; }
+            .history-question { font-size: 14px; }
+            .history-score { font-size: 11px; padding: 3px 8px; }
+            .history-meta { font-size: 11px; gap: 10px; }
+
+            /* Vocabulary */
+            .add-word-form { grid-template-columns: 1fr; gap: 10px; margin-bottom: 16px; }
+            .vocab-item { flex-direction: column; padding: 12px; border-radius: 12px; gap: 8px; }
+            .vocab-word { font-size: 15px; min-width: auto; }
+            .vocab-actions { flex-direction: row; gap: 6px; }
+            .vocab-status { font-size: 10px; }
+
+            /* Flashcard */
+            .flashcard-container { max-width: 100%; }
+            .flashcard { min-height: 240px; }
+            .flashcard-face { padding: 24px; }
             .flashcard-word { font-size: 28px; }
+            .flashcard-meaning { font-size: 17px; }
+            .flashcard-actions { gap: 8px; margin-top: 24px; flex-wrap: wrap; }
+            .flashcard-actions .btn { font-size: 13px; padding: 8px 14px; }
+
+            /* Modal */
+            .modal-overlay { padding: 12px; }
+            .modal { padding: 20px; border-radius: 20px; max-width: 100%; }
+            .modal-title { font-size: 18px; }
+            .modal-body .form-group { margin-bottom: 10px; }
+            .modal-footer { gap: 8px; }
+
+            /* Empty state */
+            .empty-state { padding: 40px 16px; }
+            .empty-state-icon { font-size: 40px; }
+            .empty-state-title { font-size: 18px; }
+            .empty-state-desc { font-size: 13px; }
+
+            /* Toast */
+            .diff-toast { bottom: 16px; right: 16px; left: 16px; padding: 12px 16px; font-size: 13px; border-radius: 14px; }
+
+            /* Practice page buttons */
+            #practiceContent > div:last-child { display: flex; flex-direction: column; gap: 8px; }
+            #practiceContent .question-nav { display: flex; }
+
+            /* Inline btns */
+            .inline-btn { font-size: 12px; padding: 3px 6px; }
+
+            /* Page title area */
+            #home > div:first-child { flex-direction: column; gap: 12px; align-items: stretch; }
+            #home > div:first-child > div:first-child { text-align: center; }
+            #home > div:first-child > div:last-child { display: flex; justify-content: center; gap: 8px; }
         }
     </style>
 
@@ -1622,42 +1878,11 @@
             </div>
 
             <div id="practiceContent" style="display: none;">
-                <div class="question-nav">
-                    <button class="btn btn-secondary btn-sm" id="prevQuestionBtn" onclick="App.prevQuestion()">
-                        <span>←</span>
-                        <span data-i18n="prev">Prev</span>
-                    </button>
-                    <div class="question-nav-info">
-                        <span id="questionCurrentIndex">1</span>
-                        <span>/</span>
-                        <span id="questionTotalCount">0</span>
-                    </div>
-                    <button class="btn btn-secondary btn-sm" id="nextQuestionBtn" onclick="App.nextQuestion()">
-                        <span data-i18n="next">Next</span>
-                        <span>→</span>
-                    </button>
-                </div>
-
                 <div class="card">
-                    <div class="card-header" style="justify-content: space-between;">
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <div class="card-icon card-icon-question">📝</div>
-                            <div>
-                                <div class="card-title" data-i18n="question">Question</div>
-                                <div class="card-subtitle">
-                                    <span id="questionCardIndex">1</span> / <span id="questionCardTotal">0</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 8px;">
-                            <button class="btn btn-secondary btn-sm" id="prevQuestionCardBtn" onclick="App.prevQuestion()">
-                                <span>⬅️</span>
-                                <span data-i18n="prev">Prev</span>
-                            </button>
-                            <button class="btn btn-secondary btn-sm" id="nextQuestionCardBtn" onclick="App.nextQuestion()">
-                                <span data-i18n="next">Next</span>
-                                <span>➡️</span>
-                            </button>
+                    <div class="card-header">
+                        <div class="card-icon card-icon-question">📝</div>
+                        <div>
+                            <div class="card-title" data-i18n="question">Question</div>
                         </div>
                     </div>
                     <div id="practiceQuestion" style="font-size: 16px; font-weight: 500; padding: 12px; background-color: var(--bg-color); border-radius: var(--radius-sm);"></div>
@@ -1674,49 +1899,10 @@
                     <textarea id="practiceUserAnswer" data-i18n-placeholder="typeAnswer" placeholder="Enter your answer..."></textarea>
                 </div>
 
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon card-icon-reference">✅</div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; flex: 1;">
-                            <div>
-                                <div class="card-title" data-i18n="referenceAnswer">Reference Answer</div>
-                                <div class="card-subtitle" data-i18n="clickToToggle">Click to toggle visibility</div>
-                            </div>
-                            <button class="btn btn-sm btn-secondary" onclick="toggleReferenceAnswer()">
-                                <span id="refToggleIcon">👁️</span>
-                                <span id="refToggleText" data-i18n="show">Show</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div id="practiceReference" style="font-size: 15px; padding: 12px; background-color: var(--bg-color); border-radius: var(--radius-sm); min-height: 80px; display: none;"></div>
-                </div>
-
-                <div style="display: flex; gap: 10px; margin-top: 20px; margin-bottom: 12px;">
-                    <button class="btn btn-secondary btn-block" id="prevQuestionBottomBtn" onclick="App.prevQuestion()">
-                        <span>⬅️</span>
-                        <span data-i18n="prev">Prev</span>
-                    </button>
-                    <button class="btn btn-secondary btn-block" id="nextQuestionBottomBtn" onclick="App.nextQuestion()">
-                        <span data-i18n="next">Next</span>
-                        <span>➡️</span>
-                    </button>
-                </div>
-
                 <button class="btn btn-primary btn-block" id="practiceCheckBtn">
                     <span>🔍</span>
                     <span data-i18n="checkAnswer">Check Answer</span>
                 </button>
-
-                <div style="display: flex; gap: 10px; margin-top: 12px;">
-                    <button class="btn btn-secondary btn-block" onclick="switchToHome()">
-                        <span>🏠</span>
-                        <span data-i18n="backToQuestionBank">Back to Question Bank</span>
-                    </button>
-                    <button class="btn btn-secondary btn-block" onclick="switchToHistory()">
-                        <span>📜</span>
-                        <span data-i18n="viewHistory">View History</span>
-                    </button>
-                </div>
 
                 <div class="results-card" id="practiceResults">
                     <div class="results-header">
@@ -1770,16 +1956,6 @@
                             <div class="answer-card-content" id="practiceUserCard"></div>
                         </div>
 
-                        <div class="answer-card">
-                            <div class="answer-card-header">
-                                <div class="answer-card-icon" style="background-color: rgba(52,199,89,0.1); color: var(--success-color);">✅</div>
-                                <div>
-                                    <div class="answer-card-title">Reference Answer</div>
-                                    <div class="answer-card-subtitle">Expected response</div>
-                                </div>
-                            </div>
-                            <div class="answer-card-content" id="practiceReferenceCard"></div>
-                        </div>
                     </div>
 
                     <div class="legend">
@@ -1994,6 +2170,37 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="editWordModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" data-i18n="editWordToVocab">Edit Word</div>
+                <button class="modal-close" onclick="closeEditWordModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label data-i18n="wordLabel">Word</label>
+                    <input type="text" id="editModalWord" readonly>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="meaningLabel">Meaning</label>
+                    <input type="text" id="editModalMeaning" data-i18n-placeholder="meaningInputPlaceholder" placeholder="Enter word meaning">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="chineseMeaningLabel">Chinese Meaning</label>
+                    <input type="text" id="editModalChineseMeaning" data-i18n-placeholder="chineseMeaningPlaceholder" placeholder="Enter Chinese meaning">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="exampleLabel">Example</label>
+                    <textarea id="editModalExample" data-i18n-placeholder="exampleInputPlaceholder" placeholder="Enter example sentence"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeEditWordModal()" data-i18n="cancel">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmEditWord()" data-i18n="saveBtn">Save</button>
+            </div>
+        </div>
+    </div>
+
     <div class="modal-overlay" id="gistSyncModal">
         <div class="modal">
             <div class="modal-header">
@@ -2180,6 +2387,18 @@
                 vocabulary = vocabulary.filter(v => String(v.id) !== String(id));
                 this._setList(this.KEYS.vocabulary, vocabulary);
                 this._cache.vocabulary = null;
+            },
+
+            async updateVocab(id, updates) {
+                const vocabulary = this._getList(this.KEYS.vocabulary);
+                const item = vocabulary.find(v => String(v.id) === String(id));
+                if (item) {
+                    Object.assign(item, updates);
+                    this._setList(this.KEYS.vocabulary, vocabulary);
+                    this._cache.vocabulary = null;
+                    return true;
+                }
+                return false;
             },
 
             invalidateCache() {
@@ -2386,13 +2605,18 @@
                     refAnswerColHeader: 'Reference Answer',
                     importQuestions: 'Import Questions',
                     addWordToVocab: 'Add Word to Vocabulary',
+                    editWordToVocab: 'Edit Word',
                     wordLabel: 'Word',
                     meaningLabel: 'Meaning',
+                    chineseMeaningLabel: 'Chinese Meaning',
                     exampleLabel: 'Example',
                     sourceLabel: 'Source',
                     meaningInputPlaceholder: 'Enter word meaning',
+                    chineseMeaningPlaceholder: 'Enter Chinese meaning',
                     exampleInputPlaceholder: 'Enter example sentence',
                     addBtn: 'Add',
+                    saveBtn: 'Save',
+                    wordUpdatedToast: 'Word updated successfully!',
                     gistSyncTitle: 'GitHub Gist Sync',
                     githubTokenLabel: 'GitHub Personal Access Token',
                     tokenStoredLocal: 'Token is stored locally in your browser.',
@@ -2499,13 +2723,18 @@
                     refAnswerColHeader: '参考答案',
                     importQuestions: '导入题目',
                     addWordToVocab: '添加单词到词汇表',
+                    editWordToVocab: '编辑单词',
                     wordLabel: '单词',
                     meaningLabel: '释义',
+                    chineseMeaningLabel: '中文释义',
                     exampleLabel: '例句',
                     sourceLabel: '来源',
                     meaningInputPlaceholder: '输入单词释义',
+                    chineseMeaningPlaceholder: '输入中文释义',
                     exampleInputPlaceholder: '输入例句',
                     addBtn: '添加',
+                    saveBtn: '保存',
+                    wordUpdatedToast: '单词更新成功！',
                     gistSyncTitle: 'GitHub Gist 同步',
                     githubTokenLabel: 'GitHub Personal Access Token',
                     tokenStoredLocal: 'Token仅存储在本地浏览器中。',
@@ -3043,15 +3272,10 @@
                 this.currentQuestion = question;
 
                 document.getElementById('practiceQuestion').textContent = question.question;
-                document.getElementById('practiceReference').textContent = question.referenceAnswer;
                 document.getElementById('practiceUserAnswer').value = '';
 
                 document.getElementById('practiceEmptyState').style.display = 'none';
                 document.getElementById('practiceContent').style.display = 'block';
-
-                document.getElementById('practiceReference').style.display = 'none';
-                document.getElementById('refToggleText').textContent = 'Show';
-                document.getElementById('refToggleIcon').textContent = '👁️';
 
                 const results = document.getElementById('practiceResults');
                 results.classList.remove('show');
@@ -3059,7 +3283,6 @@
 
                 document.getElementById('practiceDiffBar').innerHTML = '';
                 document.getElementById('practiceUserCard').innerHTML = '';
-                document.getElementById('practiceReferenceCard').innerHTML = '';
                 document.getElementById('practiceScoreBadge').textContent = 'Score: 0%';
                 document.getElementById('practiceProgressFill').style.width = '0%';
                 document.getElementById('practiceMatchedCount').textContent = '0';
@@ -3194,11 +3417,9 @@
 
                 const diffBarHtml = DiffRenderer.renderDiffBar(result.operations, reference, userAnswer);
                 const userCardHtml = DiffRenderer.renderAnswerCard(userAnswer, result.operations, 'user');
-                const referenceCardHtml = DiffRenderer.renderAnswerCard(reference, result.operations, 'reference');
 
                 document.getElementById('practiceDiffBar').innerHTML = diffBarHtml;
                 document.getElementById('practiceUserCard').innerHTML = userCardHtml;
-                document.getElementById('practiceReferenceCard').innerHTML = referenceCardHtml;
 
                 document.getElementById('practiceMatchedCount').textContent = stats.matchedCount;
                 document.getElementById('practiceDifferentCount').textContent = stats.differentCount;
@@ -3259,44 +3480,72 @@
                     return;
                 }
 
-                list.innerHTML = records.map(record => {
+                const groups = records.reduce((acc, record) => {
                     const date = new Date(record.createdAt);
-                    const dateStr = date.toLocaleDateString('en-US', {
-                        month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
-                    });
-                    const scoreClass = record.diffResult.score >= 80 ? 'score-good' : record.diffResult.score >= 50 ? 'score-medium' : 'score-low';
+                    const groupKey = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    if (!acc[groupKey]) {
+                        acc[groupKey] = [];
+                    }
+                    acc[groupKey].push(record);
+                    return acc;
+                }, {});
 
-                    return `
-                        <div class="history-item" onclick="toggleHistoryDetail(${record.id})">
-                            <div class="history-item-header">
-                                <div class="history-question">${record.question || 'Untitled Question'}</div>
-                                <span class="history-score ${scoreClass}">${record.diffResult.score}%</span>
-                            </div>
-                            <div class="history-meta">
-                                <span>${dateStr}</span>
-                                <span>Words: ${record.diffResult.stats.totalCount}</span>
-                            </div>
-                            <div class="history-detail" id="historyDetail-${record.id}">
-                                <div style="margin-bottom: 12px;">
-                                    <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Reference Answer</div>
-                                    <div style="font-size: 14px; padding: 8px; background-color: var(--bg-color); border-radius: var(--radius-xs);">${record.referenceAnswer}</div>
-                                </div>
-                                <div style="margin-bottom: 12px;">
-                                    <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Your Answer</div>
-                                    <div style="font-size: 14px; padding: 8px; background-color: var(--bg-color); border-radius: var(--radius-xs);">${record.userAnswer}</div>
-                                </div>
-                                <div class="diff-container" style="margin-bottom: 12px;">
-                                    <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Diff Result</div>
-                                    <div class="diff-text">${DiffRenderer.renderUnified(record.diffResult.operations)}</div>
-                                </div>
-                                <div style="display: flex; gap: 8px;">
-                                    <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); reopenWriting(${record.id})">Re-open</button>
-                                    <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); deleteHistoryItem(${record.id})">🗑️ Delete</button>
-                                </div>
-                            </div>
+                const sortedGroupKeys = Object.keys(groups).sort((a, b) => {
+                    const dateA = new Date(groups[a][0].createdAt);
+                    const dateB = new Date(groups[b][0].createdAt);
+                    return dateB - dateA;
+                });
+
+                let html = '';
+                sortedGroupKeys.forEach((key, idx) => {
+                    const groupRecords = groups[key];
+                    html += `
+                        <div class="group-header" onclick="toggleHistoryGroup(${idx})">
+                            <span class="group-header-icon" id="historyGroupIcon-${idx}">▶</span>
+                            <span class="group-header-title">${key}</span>
+                            <span class="group-header-count">${groupRecords.length} records</span>
+                        </div>
+                        <div class="group-content expanded" id="historyGroup-${idx}">
+                            ${groupRecords.map(record => {
+                                const date = new Date(record.createdAt);
+                                const timeStr = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                                const scoreClass = record.diffResult.score >= 80 ? 'score-good' : record.diffResult.score >= 50 ? 'score-medium' : 'score-low';
+                                return `
+                                    <div class="history-item" onclick="toggleHistoryDetail(${record.id})">
+                                        <div class="history-item-header">
+                                            <div class="history-question">${record.question || 'Untitled Question'}</div>
+                                            <span class="history-score ${scoreClass}">${record.diffResult.score}%</span>
+                                        </div>
+                                        <div class="history-meta">
+                                            <span>${timeStr}</span>
+                                            <span>Words: ${record.diffResult.stats.totalCount}</span>
+                                        </div>
+                                        <div class="history-detail" id="historyDetail-${record.id}">
+                                            <div style="margin-bottom: 12px;">
+                                                <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Reference Answer</div>
+                                                <div style="font-size: 14px; padding: 8px; background-color: var(--bg-color); border-radius: var(--radius-xs);">${record.referenceAnswer}</div>
+                                            </div>
+                                            <div style="margin-bottom: 12px;">
+                                                <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Your Answer</div>
+                                                <div style="font-size: 14px; padding: 8px; background-color: var(--bg-color); border-radius: var(--radius-xs);">${record.userAnswer}</div>
+                                            </div>
+                                            <div class="diff-container" style="margin-bottom: 12px;">
+                                                <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Diff Result</div>
+                                                <div class="diff-text">${DiffRenderer.renderUnified(record.diffResult.operations)}</div>
+                                            </div>
+                                            <div style="display: flex; gap: 8px;">
+                                                <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); reopenWriting(${record.id})">Re-open</button>
+                                                <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); deleteHistoryItem(${record.id})">🗑️ Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
                         </div>
                     `;
-                }).join('');
+                });
+
+                list.innerHTML = html;
             },
 
             async loadVocabulary() {
@@ -3367,10 +3616,12 @@
                                 </div>
                                 <div class="vocab-info">
                                     <div class="vocab-meaning">${word.meaning}</div>
+                                    ${word.chineseMeaning ? `<div class="vocab-chinese" style="font-size: 13px; color: var(--text-muted); margin-top: 2px;">${word.chineseMeaning}</div>` : ''}
                                     ${word.example ? `<div class="vocab-example">"${word.example}"</div>` : ''}
                                     <div class="vocab-from">From: ${word.from}</div>
                                 </div>
                                 <div class="vocab-actions">
+                                    <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); openEditWordModal(${word.id})">✏️</button>
                                     <button class="btn btn-sm ${word.status === 'mastered' ? 'btn-secondary' : 'btn-success'}" onclick="toggleVocabStatus(${word.id})">
                                         ${word.status === 'mastered' ? '↺ Review' : '✅ Master'}
                                     </button>
@@ -3500,6 +3751,43 @@
             }
         }
 
+        let currentEditWordId = null;
+
+        async function openEditWordModal(id) {
+            const words = await Storage.getVocabulary();
+            const word = words.find(w => String(w.id) === String(id));
+            if (!word) return;
+            currentEditWordId = id;
+            document.getElementById('editModalWord').value = word.word;
+            document.getElementById('editModalMeaning').value = word.meaning || '';
+            document.getElementById('editModalChineseMeaning').value = word.chineseMeaning || '';
+            document.getElementById('editModalExample').value = word.example || '';
+            document.getElementById('editWordModal').classList.add('show');
+        }
+
+        function closeEditWordModal() {
+            document.getElementById('editWordModal').classList.remove('show');
+            currentEditWordId = null;
+        }
+
+        async function confirmEditWord() {
+            const meaning = document.getElementById('editModalMeaning').value.trim();
+            const chineseMeaning = document.getElementById('editModalChineseMeaning').value.trim();
+            const example = document.getElementById('editModalExample').value.trim();
+
+            if (!meaning) {
+                alert(i18n.t('pleaseProvideMeaning'));
+                return;
+            }
+
+            if (currentEditWordId) {
+                await Storage.updateVocab(currentEditWordId, { meaning, chineseMeaning, example });
+                alert(i18n.t('wordUpdatedToast'));
+                closeEditWordModal();
+                App.loadVocabulary();
+            }
+        }
+
         async function deleteVocab(id) {
             if (confirm(i18n.t('deleteThisWord'))) {
                 await Storage.deleteVocab(id);
@@ -3545,6 +3833,22 @@
         function toggleVocabGroup(index) {
             const content = document.getElementById(`vocabGroup-${index}`);
             const icon = document.getElementById(`vocabGroupIcon-${index}`);
+            if (content && icon) {
+                if (content.classList.contains('expanded')) {
+                    content.classList.remove('expanded');
+                    content.classList.add('collapsed');
+                    icon.classList.add('collapsed');
+                } else {
+                    content.classList.remove('collapsed');
+                    content.classList.add('expanded');
+                    icon.classList.remove('collapsed');
+                }
+            }
+        }
+
+        function toggleHistoryGroup(index) {
+            const content = document.getElementById(`historyGroup-${index}`);
+            const icon = document.getElementById(`historyGroupIcon-${index}`);
             if (content && icon) {
                 if (content.classList.contains('expanded')) {
                     content.classList.remove('expanded');
@@ -3859,22 +4163,6 @@
             }
         }
 
-        function toggleReferenceAnswer() {
-            const refDiv = document.getElementById('practiceReference');
-            const toggleText = document.getElementById('refToggleText');
-            const toggleIcon = document.getElementById('refToggleIcon');
-
-            if (refDiv.style.display === 'none') {
-                refDiv.style.display = 'block';
-                toggleText.textContent = i18n.t('hide');
-                toggleIcon.textContent = '🙈';
-            } else {
-                refDiv.style.display = 'none';
-                toggleText.textContent = i18n.t('show');
-                toggleIcon.textContent = '👁️';
-            }
-        }
-
         async function reopenWriting(id) {
             const records = await Storage.getWritings();
             const record = records.find(r => String(r.id) === String(id));
@@ -3895,7 +4183,6 @@
                     };
 
                     document.getElementById('practiceQuestion').textContent = question;
-                    document.getElementById('practiceReference').textContent = reference;
                     document.getElementById('practiceUserAnswer').value = userAnswer;
 
                     document.getElementById('practiceEmptyState').style.display = 'none';
