@@ -1,0 +1,3927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LM English Learning System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #007aff;
+            --primary-hover: #0064d6;
+            --primary-light: rgba(0, 122, 255, 0.08);
+            --bg-color: #f2f2f7;
+            --card-bg: rgba(255, 255, 255, 0.72);
+            --card-bg-solid: #ffffff;
+            --border-color: rgba(0, 0, 0, 0.06);
+            --border-color-light: rgba(0, 0, 0, 0.04);
+            --text-primary: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --text-muted: #8e8e93;
+            --success-color: #34c759;
+            --success-bg: rgba(52, 199, 89, 0.08);
+            --error-color: #ff3b30;
+            --error-bg: rgba(255, 59, 48, 0.08);
+            --warning-color: #ff9f0a;
+            --warning-bg: rgba(255, 159, 10, 0.08);
+            --info-color: #007aff;
+            --info-bg: rgba(0, 122, 255, 0.08);
+            --shadow-sm: 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 2px 4px -1px rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 8px 24px -8px rgba(0, 0, 0, 0.08), 0 4px 8px -4px rgba(0, 0, 0, 0.05);
+            --radius: 19.2px;
+            --radius-sm: 14px;
+            --radius-xs: 8px;
+            --font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+            --transition-fast: 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+            --transition-normal: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            --transition-slow: 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+            --glass-bg: rgba(255, 255, 255, 0.55);
+            --glass-border: rgba(255, 255, 255, 0.45);
+            --glass-blur: blur(40px) saturate(180%);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            --liquid-shine: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.25) 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body.theme-ink {
+            --primary-color: #111;
+            --primary-hover: #fff;
+            --primary-light: transparent;
+            --bg-color: #ffffff;
+            --card-bg: #ffffff;
+            --border-color: #111;
+            --border-color-light: #111;
+            --text-primary: #111;
+            --text-secondary: #333;
+            --text-muted: #666;
+            --success-color: #111;
+            --success-bg: transparent;
+            --error-color: #111;
+            --error-bg: transparent;
+            --warning-color: #333;
+            --warning-bg: transparent;
+            --info-color: #111;
+            --info-bg: transparent;
+            --shadow-sm: none;
+            --shadow-md: none;
+            --shadow-lg: none;
+        }
+
+        body.theme-ink .app-container {
+            background-color: #ffffff;
+        }
+
+        body.theme-ink .header {
+            border-bottom: 2px solid #111;
+            padding-bottom: 16px;
+        }
+
+        body.theme-ink .tabs {
+            box-shadow: none;
+            border: 2px solid #111;
+            border-radius: 4px;
+        }
+
+        body.theme-ink .tab {
+            background-color: transparent;
+            border-bottom: 2px solid transparent;
+            color: #333;
+            border-radius: 0;
+        }
+
+        body.theme-ink .tab.active {
+            background-color: #111;
+            color: #fff;
+            border-bottom-color: #111;
+        }
+
+        body.theme-ink .tab:hover:not(.active) {
+            background-color: #f5f5f5;
+            color: #111;
+        }
+
+        body.theme-ink .card {
+            box-shadow: none;
+            border: 2px solid #111;
+            border-radius: 4px;
+            background-color: #ffffff;
+        }
+
+        body.theme-ink .card:hover {
+            box-shadow: none;
+            border-color: #111;
+            transform: none;
+        }
+
+        body.theme-ink .card-header {
+            background-color: transparent;
+            border-bottom: 2px solid #111;
+        }
+
+        body.theme-ink .btn {
+            background-color: transparent;
+            border: 2px solid #111;
+            color: #111;
+            border-radius: 4px;
+            box-shadow: none;
+        }
+
+        body.theme-ink .btn:hover {
+            background-color: #111;
+            color: #fff;
+            border-color: #111;
+            box-shadow: none;
+        }
+
+        body.theme-ink .btn-primary {
+            background-color: transparent;
+            border: 2px solid #111;
+            color: #111;
+        }
+
+        body.theme-ink .btn-primary:hover {
+            background-color: #111;
+            color: #fff;
+        }
+
+        body.theme-ink .btn-success,
+        body.theme-ink .btn-danger,
+        body.theme-ink .btn-warning,
+        body.theme-ink .btn-secondary {
+            background-color: transparent;
+            border: 2px solid #111;
+            color: #111;
+        }
+
+        body.theme-ink .btn-success:hover,
+        body.theme-ink .btn-danger:hover,
+        body.theme-ink .btn-warning:hover,
+        body.theme-ink .btn-secondary:hover {
+            background-color: #111;
+            color: #fff;
+        }
+
+        body.theme-ink .btn:disabled {
+            background-color: transparent;
+            border-color: #999;
+            color: #999;
+        }
+
+        body.theme-ink .form-group input,
+        body.theme-ink .form-group textarea,
+        body.theme-ink .form-group select {
+            border: 2px solid #111;
+            border-radius: 4px;
+            background-color: #ffffff;
+            box-shadow: none;
+        }
+
+        body.theme-ink input:focus,
+        body.theme-ink textarea:focus,
+        body.theme-ink select:focus {
+            border-color: #111;
+            box-shadow: none;
+        }
+
+        body.theme-ink .results-card {
+            border: 2px solid #111;
+            border-radius: 4px;
+            box-shadow: none;
+            background-color: #ffffff;
+        }
+
+        body.theme-ink .results-header {
+            background-color: transparent;
+            border-bottom: 2px solid #111;
+        }
+
+        body.theme-ink .score-badge {
+            border: 2px solid #111;
+            background-color: transparent;
+            color: #111;
+        }
+
+        body.theme-ink .progress-bar {
+            border: 2px solid #111;
+            border-radius: 0;
+            background-color: transparent;
+        }
+
+        body.theme-ink .progress-fill {
+            background-color: #111;
+        }
+
+        body.theme-ink .score-good,
+        body.theme-ink .score-medium,
+        body.theme-ink .score-low {
+            background-color: transparent;
+            color: #111;
+            border: 2px solid #111;
+        }
+
+        body.theme-ink .progress-good,
+        body.theme-ink .progress-medium,
+        body.theme-ink .progress-low {
+            background-color: #111;
+        }
+
+        body.theme-ink .stat-value-good,
+        body.theme-ink .stat-value-error,
+        body.theme-ink .stat-value-warning {
+            color: #111;
+        }
+
+        body.theme-ink .diff-bar {
+            border: 2px solid #111;
+            border-radius: 4px;
+            background-color: #ffffff;
+            box-shadow: none;
+        }
+
+        body.theme-ink .diff-token {
+            background-color: transparent;
+            border: 1px solid transparent;
+            border-radius: 0;
+            padding: 4px 8px;
+        }
+
+        body.theme-ink .diff-token.correct {
+            background-color: transparent;
+            color: #111;
+            border-color: transparent;
+        }
+
+        body.theme-ink .diff-token.missing {
+            background-color: transparent;
+            color: #111;
+            font-weight: 900;
+            text-decoration: underline;
+            text-decoration-style: double;
+            text-decoration-color: #111;
+            border-color: transparent;
+        }
+
+        body.theme-ink .diff-token.extra {
+            background-color: transparent;
+            color: #111;
+            text-decoration: line-through;
+            font-weight: 400;
+            border-color: transparent;
+        }
+
+        body.theme-ink .diff-token.replace-delete {
+            background-color: transparent;
+            color: #111;
+            font-weight: 900;
+            text-decoration: underline;
+            text-decoration-style: double;
+            text-decoration-color: #111;
+            border-color: transparent;
+        }
+
+        body.theme-ink .diff-token.replace-insert {
+            background-color: transparent;
+            color: #111;
+            text-decoration: underline;
+            text-decoration-style: wavy;
+            text-decoration-color: #111;
+            font-weight: 500;
+            border-color: transparent;
+        }
+
+        body.theme-ink .diff-token:hover {
+            background-color: #f5f5f5;
+            border-color: #111;
+        }
+
+        body.theme-ink .answer-cards {
+            gap: 16px;
+        }
+
+        body.theme-ink .answer-card {
+            box-shadow: none;
+            border: 2px solid #111;
+            border-radius: 4px;
+            background-color: #ffffff;
+        }
+
+        body.theme-ink .answer-card:hover {
+            box-shadow: none;
+            transform: none;
+            border-color: #111;
+        }
+
+        body.theme-ink .answer-card-header {
+            background-color: transparent;
+            border-bottom: 2px solid #111;
+        }
+
+        body.theme-ink .legend {
+            border-top: 2px solid #111;
+        }
+
+        body.theme-ink .legend-color {
+            background-color: transparent !important;
+            border: 2px solid #111;
+            color: #111 !important;
+            text-decoration: none !important;
+        }
+
+        body.theme-ink .question-card {
+            box-shadow: none;
+            border: 2px solid #111;
+            border-radius: 4px;
+        }
+
+        body.theme-ink .question-card:hover {
+            box-shadow: none;
+            border-color: #111;
+            transform: none;
+        }
+
+        body.theme-ink .history-item {
+            box-shadow: none;
+            border: 2px solid #111;
+            border-radius: 4px;
+        }
+
+        body.theme-ink .history-item:hover {
+            box-shadow: none;
+            border-color: #111;
+        }
+
+        body.theme-ink .vocab-item {
+            border-bottom: 2px solid #111;
+        }
+
+        body.theme-ink .vocab-item:last-child {
+            border-bottom: none;
+        }
+
+        body.theme-ink .vocab-status {
+            border: 2px solid #111;
+            background-color: transparent;
+            border-radius: 0;
+        }
+
+        body.theme-ink .status-mastered {
+            background-color: #111;
+            color: #fff;
+            border-color: #111;
+        }
+
+        body.theme-ink .status-review {
+            border-style: dashed;
+            color: #333;
+        }
+
+        body.theme-ink .status-weak {
+            text-decoration: line-through;
+            color: #666;
+        }
+
+        body.theme-ink .flashcard-container {
+            perspective: none;
+        }
+
+        body.theme-ink .flashcard {
+            border: 4px double #111;
+            border-radius: 4px;
+            box-shadow: none;
+            background-color: #ffffff;
+        }
+
+        body.theme-ink .flashcard.flipped {
+            box-shadow: none;
+        }
+
+        body.theme-ink .flashcard-btn {
+            background-color: transparent;
+            border: 2px solid #111;
+            color: #111;
+            border-radius: 4px;
+        }
+
+        body.theme-ink .flashcard-btn:hover {
+            background-color: #111;
+            color: #fff;
+        }
+
+        body.theme-ink .modal {
+            border: 2px solid #111;
+            border-radius: 4px;
+            box-shadow: none;
+            background-color: #ffffff;
+        }
+
+        body.theme-ink .modal-header {
+            border-bottom: 2px solid #111;
+            background-color: transparent;
+        }
+
+        body.theme-ink .empty-state {
+            border: 2px solid #111;
+            border-radius: 4px;
+            background-color: #ffffff;
+        }
+
+        body.theme-ink .stats-grid {
+            gap: 16px;
+        }
+
+        body.theme-ink .stat-item {
+            border: 2px solid #111;
+            border-radius: 4px;
+            background-color: #ffffff;
+        }
+
+        body.theme-ink .inline-btn {
+            color: #111;
+            border-bottom: 2px solid #111;
+            background-color: transparent;
+            padding: 0;
+            margin: 0 4px;
+        }
+
+        body.theme-ink .inline-btn:hover {
+            background-color: #111;
+            color: #fff;
+        }
+
+        body.theme-ink #excelDropZone {
+            border: 2px dashed #111;
+            border-radius: 4px;
+        }
+
+        body.theme-ink #excelDropZone:hover {
+            border-style: solid;
+        }
+
+        .app-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        .header { margin-bottom: 28px; }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .header-text { flex: 1; text-align: left; }
+        .header-logo { font-size: 40px; margin-bottom: 8px; }
+        .header h1 {
+            font-size: 34px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+        }
+        .header p { color: var(--text-secondary); font-size: 15px; font-weight: 400; }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            margin-bottom: 28px;
+            padding: 6px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-radius: var(--radius);
+            box-shadow: var(--glass-shadow);
+            border: 1px solid var(--glass-border);
+            overflow-x: auto;
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 100px;
+            padding: 10px 20px;
+            border: none;
+            background: none;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .tab:hover { color: var(--primary-color); background-color: rgba(0, 122, 255, 0.06); }
+        .tab.active {
+            color: #fff;
+            background-color: var(--primary-color);
+            box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+        }
+
+        .page { display: none; animation: fadeIn 0.35s cubic-bezier(0.25, 0.1, 0.25, 1); }
+        .page.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-radius: var(--radius);
+            box-shadow: var(--glass-shadow);
+            border: 1px solid var(--glass-border);
+            padding: 24px;
+            margin-bottom: 16px;
+            transition: all var(--transition-normal);
+        }
+
+        .card:hover { box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6); }
+        .card:focus-within { box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2), var(--glass-shadow); border-color: rgba(0, 122, 255, 0.3); }
+
+        .question-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-radius: var(--radius-sm);
+            box-shadow: var(--glass-shadow);
+            border: 1px solid var(--glass-border);
+        }
+
+        .question-nav-info {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        body.theme-ink .question-nav {
+            background-color: #ffffff;
+            border: 2px solid #111;
+            border-radius: 4px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .card-icon-question { background-color: var(--info-bg); color: var(--info-color); }
+        .card-icon-reference { background-color: var(--success-bg); color: var(--success-color); }
+        .card-icon-user { background-color: var(--primary-light); color: var(--primary-color); }
+
+        .card-title { font-size: 17px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.2px; }
+        .card-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 2px; font-weight: 400; }
+
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1.5px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 15px;
+            color: var(--text-primary);
+            background-color: var(--card-bg-solid);
+            transition: all var(--transition-fast);
+            resize: vertical;
+        }
+
+        input[type="text"]:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.12);
+            background-color: var(--card-bg-solid);
+        }
+
+        textarea { min-height: 100px; }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 15px;
+            font-weight: 500;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            letter-spacing: -0.1px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover { background-color: var(--primary-hover); box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25); }
+        .btn-secondary {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .btn-secondary:hover { background-color: rgba(0, 0, 0, 0.04); }
+        .btn-success { background-color: rgba(52, 199, 89, 0.12); color: var(--success-color); }
+        .btn-success:hover { background-color: rgba(52, 199, 89, 0.2); }
+        .btn-danger { background-color: rgba(255, 59, 48, 0.1); color: var(--error-color); }
+        .btn-danger:hover { background-color: rgba(255, 59, 48, 0.18); }
+        .btn-warning { background-color: rgba(255, 159, 10, 0.1); color: var(--warning-color); }
+        .btn-warning:hover { background-color: rgba(255, 159, 10, 0.18); }
+
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        .btn-block { width: 100%; }
+
+        .results-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-radius: var(--radius);
+            box-shadow: var(--glass-shadow);
+            border: 1px solid var(--glass-border);
+            padding: 0;
+            margin-top: 20px;
+            display: none;
+            overflow: hidden;
+        }
+
+        .results-card.show { display: block; }
+
+        .results-header {
+            padding: 20px 24px;
+            background: linear-gradient(135deg, rgba(0, 122, 255, 0.06) 0%, rgba(0, 122, 255, 0.02) 100%);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .results-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .score-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .score-good { background-color: rgba(52, 199, 89, 0.12); color: var(--success-color); }
+        .score-medium { background-color: rgba(255, 159, 10, 0.12); color: var(--warning-color); }
+        .score-low { background-color: rgba(255, 59, 48, 0.12); color: var(--error-color); }
+
+        .progress-bar {
+            height: 6px;
+            background-color: rgba(0, 0, 0, 0.06);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .progress-good { background-color: var(--success-color); }
+        .progress-medium { background-color: var(--warning-color); }
+        .progress-low { background-color: var(--error-color); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            background-color: var(--card-bg);
+            border-radius: var(--radius-sm);
+        }
+
+        .stat-value { font-size: 22px; font-weight: 700; }
+        .stat-value-good { color: var(--success-color); }
+        .stat-value-error { color: var(--error-color); }
+        .stat-value-warning { color: var(--warning-color); }
+        .stat-value-normal { color: var(--text-primary); }
+        .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+        .results-content { padding: 20px 24px; }
+
+        .result-section { margin-bottom: 20px; }
+        .result-section-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+        .result-label { font-size: 14px; font-weight: 600; color: var(--text-secondary); }
+
+        .result-badge {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .diff-container {
+            background-color: var(--card-bg-solid);
+            border-radius: var(--radius-sm);
+            padding: 14px 18px;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .diff-text {
+            font-size: 14px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .diff-equal { color: var(--text-primary); }
+        .diff-delete {
+            background-color: rgba(255, 59, 48, 0.1);
+            color: var(--error-color);
+            text-decoration: line-through;
+            padding: 1px 4px;
+            border-radius: 4px;
+            margin: 0 1px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .diff-insert {
+            background-color: rgba(52, 199, 89, 0.1);
+            color: var(--success-color);
+            text-decoration: underline;
+            padding: 1px 4px;
+            border-radius: 4px;
+            margin: 0 1px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .diff-replace-delete {
+            background-color: rgba(255, 159, 10, 0.1);
+            color: var(--warning-color);
+            text-decoration: line-through;
+            padding: 1px 4px;
+            border-radius: 4px;
+            margin: 0 1px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .diff-replace-insert {
+            background-color: rgba(255, 159, 10, 0.1);
+            color: var(--warning-color);
+            font-weight: 500;
+            padding: 1px 4px;
+            border-radius: 4px;
+            margin: 0 1px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .diff-word:hover {
+            filter: brightness(0.95);
+            outline: 1.5px solid var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .legend {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 600;
+        }
+
+        .history-list { max-height: 600px; overflow-y: auto; }
+        .history-item {
+            padding: 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .history-item:hover {
+            border-color: rgba(0, 122, 255, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .history-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .history-question {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+            margin-right: 12px;
+            line-height: 1.4;
+        }
+
+        .history-score {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            white-space: nowrap;
+        }
+
+        .history-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            gap: 16px;
+        }
+
+        .history-detail {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .history-detail.show { display: block; }
+
+        .add-word-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .vocab-list { max-height: 500px; overflow-y: auto; }
+        .vocab-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            margin-bottom: 10px;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .vocab-word {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--primary-color);
+            min-width: 100px;
+            letter-spacing: -0.2px;
+        }
+
+        .vocab-info { flex: 1; }
+        .vocab-meaning { font-size: 14px; color: var(--text-primary); margin-bottom: 4px; }
+        .vocab-example { font-size: 13px; color: var(--text-muted); font-style: italic; }
+        .vocab-from { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+        .vocab-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .vocab-status {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .status-mastered { background-color: rgba(52, 199, 89, 0.12); color: var(--success-color); }
+        .status-review { background-color: rgba(255, 159, 10, 0.12); color: var(--warning-color); }
+
+        .question-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+
+        .question-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .question-card:hover {
+            border-color: rgba(0, 122, 255, 0.2);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .question-card-content {
+            margin-bottom: 16px;
+        }
+
+        .question-card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .question-card-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .question-card-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .diff-bar {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--glass-shadow);
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .diff-bar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .diff-tokens {
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .diff-token {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .diff-token:hover {
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: var(--shadow-md);
+        }
+
+        .diff-token:active {
+            transform: scale(0.98);
+        }
+
+        .diff-token.correct {
+            background-color: rgba(52, 199, 89, 0.08);
+            color: var(--success-color);
+            border: 1px solid rgba(52, 199, 89, 0.15);
+        }
+
+        .diff-token.correct:hover { background-color: rgba(52, 199, 89, 0.14); }
+
+        .diff-token.missing {
+            background-color: rgba(255, 159, 10, 0.08);
+            color: var(--warning-color);
+            border: 1px dashed rgba(255, 159, 10, 0.25);
+        }
+
+        .diff-token.missing:hover { background-color: rgba(255, 159, 10, 0.14); }
+
+        .diff-token.extra {
+            background-color: rgba(142, 142, 147, 0.08);
+            color: var(--text-muted);
+            border: 1px solid rgba(142, 142, 147, 0.15);
+            text-decoration: line-through;
+        }
+
+        .diff-token.extra:hover { background-color: rgba(142, 142, 147, 0.14); }
+
+        .diff-token.replace-delete {
+            background-color: rgba(255, 59, 48, 0.08);
+            color: var(--error-color);
+            border: 1px solid rgba(255, 59, 48, 0.15);
+            margin-right: -4px;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .diff-token.replace-insert {
+            background-color: rgba(142, 142, 147, 0.08);
+            color: var(--text-muted);
+            border: 1px solid rgba(142, 142, 147, 0.15);
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            margin-left: -4px;
+            padding-left: 8px;
+        }
+
+        .diff-token .token-indicator {
+            font-size: 10px;
+            margin-right: 4px;
+            opacity: 0.7;
+        }
+
+        .answer-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .answer-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            box-shadow: var(--glass-shadow);
+            transition: all 0.2s ease;
+        }
+
+        .answer-card:hover {
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            transform: translateY(-1px);
+        }
+
+        .answer-card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .answer-card-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .answer-card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .answer-card-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .answer-card-content {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .answer-card-content .highlight {
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .answer-card-content .highlight-missing {
+            background-color: rgba(255, 159, 10, 0.12);
+            color: var(--warning-color);
+        }
+
+        .answer-card-content .highlight-extra {
+            background-color: rgba(255, 59, 48, 0.1);
+            color: var(--error-color);
+        }
+
+        .answer-card-content .highlight-replace {
+            background-color: rgba(94, 92, 230, 0.1);
+            color: #5e5ce6;
+        }
+
+        .diff-toast {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            color: var(--text-primary);
+            padding: 14px 24px;
+            border-radius: 16px;
+            box-shadow: var(--glass-shadow);
+            border: 1px solid var(--glass-border);
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .diff-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .answer-cards {
+                grid-template-columns: 1fr;
+            }
+            .diff-bar {
+                padding: 16px;
+            }
+        }
+
+        .flashcard-container {
+            perspective: 1000px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .flashcard {
+            width: 100%;
+            min-height: 300px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+
+        .flashcard.flipped { transform: rotateY(180deg); }
+
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: var(--radius);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 32px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #0064d6 100%);
+            color: white;
+        }
+
+        .flashcard-back {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            color: var(--text-primary);
+            transform: rotateY(180deg);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .flashcard-word { font-size: 36px; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.5px; }
+        .flashcard-hint { font-size: 14px; opacity: 0.8; }
+        .flashcard-meaning { font-size: 20px; font-weight: 600; color: var(--primary-color); margin-bottom: 16px; }
+        .flashcard-example { font-size: 15px; color: var(--text-secondary); text-align: center; }
+
+        .flashcard-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 32px;
+            flex-wrap: wrap;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.4; }
+        .empty-state-title { font-size: 20px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; }
+        .empty-state-desc { font-size: 15px; }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-overlay.show { display: flex; }
+
+        .modal {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-radius: var(--radius);
+            box-shadow: var(--glass-shadow), 0 24px 64px rgba(0, 0, 0, 0.12);
+            border: 1px solid var(--glass-border);
+            width: 100%;
+            max-width: 480px;
+            padding: 24px;
+            animation: slideUp 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title { font-size: 20px; font-weight: 600; letter-spacing: -0.3px; }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px;
+        }
+
+        .modal-close:hover { color: var(--text-primary); }
+
+        .modal-body { margin-bottom: 20px; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .inline-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: var(--radius-xs);
+        }
+
+        .inline-btn:hover { background-color: rgba(0, 122, 255, 0.06); }
+
+        .filter-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            font-size: 14px;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            transition: border-color 0.2s;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .filter-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .group-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background-color: var(--bg-color);
+            border-radius: var(--radius);
+            margin-bottom: 12px;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s;
+        }
+
+        .group-header:hover {
+            background-color: rgba(0, 122, 255, 0.04);
+        }
+
+        .group-header-icon {
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+
+        .group-header-icon.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .group-header-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .group-header-count {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-left: auto;
+        }
+
+        .group-content {
+            margin-left: 24px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, opacity 0.3s;
+        }
+
+        .group-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+            margin-bottom: 0;
+        }
+
+        .group-content.expanded {
+            max-height: 2000px;
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .tabs { flex-wrap: wrap; }
+            .tab { flex: none; min-width: auto; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .add-word-form { grid-template-columns: 1fr; }
+            .vocab-item { flex-direction: column; }
+            .vocab-actions { flex-direction: row; }
+            .flashcard-word { font-size: 28px; }
+        }
+    </style>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+        import { getFirestore, collection, doc, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteDoc, query, orderBy, where, serverTimestamp, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-0v6ssGvuTFXwReYHe1YVU570-q4B8-k",
+            authDomain: "lmenglish-power-byai-1.firebaseapp.com",
+            projectId: "lmenglish-power-byai-1",
+            storageBucket: "lmenglish-power-byai-1.firebasestorage.app",
+            messagingSenderId: "265120161906",
+            appId: "1:265120161906:web:530172b165876bf2e2a2eb"
+        };
+
+        // Initialize Firebase
+        const firebaseApp = initializeApp(firebaseConfig);
+        const db = getFirestore(firebaseApp);
+
+        // Expose to window immediately
+        window.db = db;
+        window.firebaseModules = {
+            collection, doc, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteDoc, query, orderBy, where, serverTimestamp
+        };
+
+        // Enable offline persistence (async, optional)
+        try {
+            await enableIndexedDbPersistence(db);
+        } catch (err) {
+            console.warn('Firestore persistence not enabled:', err.code);
+        }
+
+        // Signal that Firebase is ready
+        window.firebaseReady = true;
+        window.dispatchEvent(new Event('firebase-ready'));
+    </script>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <div class="header-content">
+                <div class="header-text">
+                    <div class="header-logo">✍️</div>
+                    <h1>LM English Learning System</h1>
+                    <p>Write, Review, Learn - Complete English Learning Loop</p>
+                </div>
+                <button id="themeToggle" class="btn btn-sm" title="Toggle Theme">
+                    <span id="themeIcon">🌓</span>
+                    <span id="themeLabel">Ink Mode</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" data-page="home">
+                <span>🏠</span>
+                <span data-i18n="tabHome">Home</span>
+            </button>
+            <button class="tab" data-page="practice">
+                <span>✍️</span>
+                <span data-i18n="tabPractice">Practice</span>
+            </button>
+            <button class="tab" data-page="history">
+                <span>📜</span>
+                <span data-i18n="tabHistory">History</span>
+            </button>
+            <button class="tab" data-page="vocabulary">
+                <span>📚</span>
+                <span data-i18n="tabVocabulary">Vocabulary</span>
+            </button>
+            <button class="tab" data-page="flashcards">
+                <span>🎴</span>
+                <span data-i18n="tabFlashcards">Flashcards</span>
+            </button>
+            <button class="tab" id="langToggleBtn" onclick="i18n.toggle()" style="margin-left: auto;">
+                <span>🌐</span>
+                <span id="langToggleText" data-i18n="langToggle">中/EN</span>
+            </button>
+        </div>
+
+        <div id="home" class="page active">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <div>
+                    <h2 style="font-size: 22px; font-weight: 700; color: var(--text-primary);" data-i18n="questionBank">Question Bank</h2>
+                    <p style="font-size: 14px; color: var(--text-secondary); margin-top: 4px;" data-i18n="questionBankDesc">Select a question to practice or add a new one</p>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-secondary" onclick="openImportExcelModal()">
+                        <span>📊</span>
+                        <span data-i18n="importExcel">Import Excel</span>
+                    </button>
+                    <button class="btn btn-secondary" onclick="openGistSyncModal()">
+                        <span>☁️</span>
+                        <span data-i18n="gistSync">Gist Sync</span>
+                    </button>
+                    <button class="btn btn-primary" onclick="openAddQuestionModal()">
+                        <span>➕</span>
+                        <span data-i18n="addQuestion">Add Question</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <input type="text" id="questionFilter" class="filter-input" data-i18n-placeholder="searchQuestions" placeholder="Search questions..." oninput="App.loadQuestions()">
+            </div>
+
+            <div class="question-grid" id="questionGrid"></div>
+        </div>
+
+        <div id="practice" class="page">
+            <div id="practiceEmptyState" class="empty-state" style="display: block;">
+                <div class="empty-state-icon">📝</div>
+                <div class="empty-state-title" data-i18n="selectQuestionFirst">Select a Question First</div>
+                <div class="empty-state-desc" data-i18n="selectQuestionDesc">Go to Home page and choose a question to practice</div>
+                <button class="btn btn-primary" style="margin-top: 16px;" onclick="switchToHome()">
+                    <span>🏠</span>
+                    <span data-i18n="goToQuestionBank">Go to Question Bank</span>
+                </button>
+            </div>
+
+            <div id="practiceContent" style="display: none;">
+                <div class="question-nav">
+                    <button class="btn btn-secondary btn-sm" id="prevQuestionBtn" onclick="App.prevQuestion()">
+                        <span>←</span>
+                        <span data-i18n="prev">Prev</span>
+                    </button>
+                    <div class="question-nav-info">
+                        <span id="questionCurrentIndex">1</span>
+                        <span>/</span>
+                        <span id="questionTotalCount">0</span>
+                    </div>
+                    <button class="btn btn-secondary btn-sm" id="nextQuestionBtn" onclick="App.nextQuestion()">
+                        <span data-i18n="next">Next</span>
+                        <span>→</span>
+                    </button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" style="justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div class="card-icon card-icon-question">📝</div>
+                            <div>
+                                <div class="card-title" data-i18n="question">Question</div>
+                                <div class="card-subtitle">
+                                    <span id="questionCardIndex">1</span> / <span id="questionCardTotal">0</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-secondary btn-sm" id="prevQuestionCardBtn" onclick="App.prevQuestion()">
+                                <span>⬅️</span>
+                                <span data-i18n="prev">Prev</span>
+                            </button>
+                            <button class="btn btn-secondary btn-sm" id="nextQuestionCardBtn" onclick="App.nextQuestion()">
+                                <span data-i18n="next">Next</span>
+                                <span>➡️</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="practiceQuestion" style="font-size: 16px; font-weight: 500; padding: 12px; background-color: var(--bg-color); border-radius: var(--radius-sm);"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon card-icon-user">👤</div>
+                        <div>
+                            <div class="card-title" data-i18n="yourAnswer">Your Answer</div>
+                            <div class="card-subtitle" data-i18n="yourAnswerDesc">Write your response here</div>
+                        </div>
+                    </div>
+                    <textarea id="practiceUserAnswer" data-i18n-placeholder="typeAnswer" placeholder="Enter your answer..."></textarea>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon card-icon-reference">✅</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex: 1;">
+                            <div>
+                                <div class="card-title" data-i18n="referenceAnswer">Reference Answer</div>
+                                <div class="card-subtitle" data-i18n="clickToToggle">Click to toggle visibility</div>
+                            </div>
+                            <button class="btn btn-sm btn-secondary" onclick="toggleReferenceAnswer()">
+                                <span id="refToggleIcon">👁️</span>
+                                <span id="refToggleText" data-i18n="show">Show</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="practiceReference" style="font-size: 15px; padding: 12px; background-color: var(--bg-color); border-radius: var(--radius-sm); min-height: 80px; display: none;"></div>
+                </div>
+
+                <div style="display: flex; gap: 10px; margin-top: 20px; margin-bottom: 12px;">
+                    <button class="btn btn-secondary btn-block" id="prevQuestionBottomBtn" onclick="App.prevQuestion()">
+                        <span>⬅️</span>
+                        <span data-i18n="prev">Prev</span>
+                    </button>
+                    <button class="btn btn-secondary btn-block" id="nextQuestionBottomBtn" onclick="App.nextQuestion()">
+                        <span data-i18n="next">Next</span>
+                        <span>➡️</span>
+                    </button>
+                </div>
+
+                <button class="btn btn-primary btn-block" id="practiceCheckBtn">
+                    <span>🔍</span>
+                    <span data-i18n="checkAnswer">Check Answer</span>
+                </button>
+
+                <div style="display: flex; gap: 10px; margin-top: 12px;">
+                    <button class="btn btn-secondary btn-block" onclick="switchToHome()">
+                        <span>🏠</span>
+                        <span data-i18n="backToQuestionBank">Back to Question Bank</span>
+                    </button>
+                    <button class="btn btn-secondary btn-block" onclick="switchToHistory()">
+                        <span>📜</span>
+                        <span data-i18n="viewHistory">View History</span>
+                    </button>
+                </div>
+
+                <div class="results-card" id="practiceResults">
+                    <div class="results-header">
+                        <div class="results-header-top">
+                            <div>
+                                <div style="font-size: 16px; font-weight: 600; margin-bottom: 4px;">📊 Comparison Results</div>
+                                <div style="font-size: 13px; color: var(--text-muted);">Click on highlighted words to add to vocabulary</div>
+                            </div>
+                            <span class="score-badge" id="practiceScoreBadge">Score: 0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="practiceProgressFill"></div>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value stat-value-good" id="practiceMatchedCount">0</div>
+                                <div class="stat-label">Matched</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value stat-value-error" id="practiceDifferentCount">0</div>
+                                <div class="stat-label">Different</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value stat-value-warning" id="practiceMissingCount">0</div>
+                                <div class="stat-label">Missing</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value stat-value-normal" id="practiceTotalCount">0</div>
+                                <div class="stat-label">Total</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="diff-bar">
+                        <div class="diff-bar-header">
+                            <span>Interactive Diff</span>
+                            <span style="font-size: 12px; font-weight: 400; color: var(--text-muted);">Click any word to add to vocabulary</span>
+                        </div>
+                        <div class="diff-tokens" id="practiceDiffBar"></div>
+                    </div>
+
+                    <div class="answer-cards">
+                        <div class="answer-card">
+                            <div class="answer-card-header">
+                                <div class="answer-card-icon" style="background-color: rgba(255,59,48,0.1); color: var(--error-color);">👤</div>
+                                <div>
+                                    <div class="answer-card-title">Your Answer</div>
+                                    <div class="answer-card-subtitle">Submitted response</div>
+                                </div>
+                            </div>
+                            <div class="answer-card-content" id="practiceUserCard"></div>
+                        </div>
+
+                        <div class="answer-card">
+                            <div class="answer-card-header">
+                                <div class="answer-card-icon" style="background-color: rgba(52,199,89,0.1); color: var(--success-color);">✅</div>
+                                <div>
+                                    <div class="answer-card-title">Reference Answer</div>
+                                    <div class="answer-card-subtitle">Expected response</div>
+                                </div>
+                            </div>
+                            <div class="answer-card-content" id="practiceReferenceCard"></div>
+                        </div>
+                    </div>
+
+                    <div class="legend">
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: rgba(52,199,89,0.1); color: var(--success-color);">✓</span>
+                            <span>Correct</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: rgba(255,59,48,0.1); color: var(--error-color); text-decoration: line-through;">−</span>
+                            <span>Missing</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: rgba(142,142,147,0.1); color: var(--text-muted);">+</span>
+                            <span>Extra</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color" style="background-color: rgba(255,159,10,0.1); color: var(--warning-color);">↔</span>
+                            <span>Replaced</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="history" class="page">
+            <div class="card">
+                <div class="card-header" style="justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="card-icon" style="background-color: var(--info-bg); color: var(--info-color);">📜</div>
+                        <div>
+                            <div class="card-title" data-i18n="writingHistory">Writing History</div>
+                            <div class="card-subtitle" data-i18n="writingHistoryDesc">Your past writing records</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-danger btn-sm" id="clearHistoryBtn" onclick="clearAllHistory()">
+                        <span>🗑️</span>
+                        <span data-i18n="clearAll">Clear All</span>
+                    </button>
+                </div>
+                <div class="history-list" id="historyList"></div>
+            </div>
+        </div>
+
+        <div id="vocabulary" class="page">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon" style="background-color: var(--success-bg); color: var(--success-color);">📚</div>
+                    <div>
+                        <div class="card-title" data-i18n="vocabulary">Vocabulary</div>
+                        <div class="card-subtitle" data-i18n="vocabularyDesc">Build your word collection</div>
+                    </div>
+                </div>
+
+                <div class="add-word-form">
+                    <input type="text" id="newWord" data-i18n-placeholder="wordPlaceholder" placeholder="Word">
+                    <input type="text" id="newMeaning" data-i18n-placeholder="meaningPlaceholder" placeholder="Meaning">
+                    <textarea id="newExample" data-i18n-placeholder="examplePlaceholder" placeholder="Example sentence"></textarea>
+                    <button class="btn btn-primary" style="align-self: flex-end;" id="addWordBtn">
+                        <span>➕</span>
+                        <span data-i18n="addWord">Add Word</span>
+                    </button>
+                </div>
+
+                <button class="btn btn-warning btn-block" style="margin-bottom: 20px;" onclick="switchToFlashcards()">
+                    <span>🎴</span>
+                    <span data-i18n="startFlashcardReview">Start Flashcard Review</span>
+                </button>
+
+                <div class="filter-bar">
+                    <input type="text" id="vocabFilter" class="filter-input" data-i18n-placeholder="searchVocabulary" placeholder="Search vocabulary..." oninput="App.loadVocabulary()">
+                </div>
+
+                <div class="vocab-list" id="vocabList"></div>
+            </div>
+        </div>
+
+        <div id="flashcards" class="page">
+            <div class="card" style="text-align: center;">
+                <div class="card-header" style="justify-content: center;">
+                    <div class="card-icon" style="background-color: var(--warning-bg); color: var(--warning-color);">🎴</div>
+                    <div>
+                        <div class="card-title" data-i18n="flashcardReview">Flashcard Review</div>
+                        <div class="card-subtitle" data-i18n="clickCardToFlip">Click card to flip</div>
+                    </div>
+                </div>
+
+                <div class="flashcard-container" id="flashcardContainer"></div>
+
+                <div class="flashcard-actions">
+                    <button class="btn btn-secondary" id="prevCardBtn">
+                        <span>⬅️</span>
+                        <span data-i18n="prevCard">Previous</span>
+                    </button>
+                    <button class="btn btn-secondary" id="shuffleBtn">
+                        <span>🔀</span>
+                        <span data-i18n="shuffle">Shuffle</span>
+                    </button>
+                    <button class="btn btn-success" id="markMasteredBtn">
+                        <span>✅</span>
+                        <span data-i18n="markMastered">Mark Mastered</span>
+                    </button>
+                    <button class="btn btn-primary" id="nextCardBtn">
+                        <span data-i18n="nextCard">Next</span>
+                        <span>➡️</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="addQuestionModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" data-i18n="addNewQuestion">Add New Question</div>
+                <button class="modal-close" onclick="closeAddQuestionModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label data-i18n="questionLabel">Question</label>
+                    <textarea id="modalQuestion" data-i18n-placeholder="questionModalPlaceholder" placeholder="Enter the writing prompt or topic..." style="min-height: 80px;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="referenceAnswerLabel">Reference Answer</label>
+                    <textarea id="modalReferenceAnswer" data-i18n-placeholder="refAnswerModalPlaceholder" placeholder="Enter the standard or expected answer..." style="min-height: 100px;"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAddQuestionModal()" data-i18n="cancel">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmAddQuestion()" data-i18n="addQuestion">Add Question</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="importExcelModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" data-i18n="importQuestionsFromExcel">Import Questions from Excel</div>
+                <button class="modal-close" onclick="closeImportExcelModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label data-i18n="excelFileLabel">Excel File (.xlsx, .xls, .csv)</label>
+                    <div style="border: 2px dashed var(--border-color); border-radius: var(--radius); padding: 30px; text-align: center; cursor: pointer; transition: all 0.2s;" id="excelDropZone" onclick="document.getElementById('excelFileInput').click()">
+                        <div style="font-size: 32px; margin-bottom: 12px;">📁</div>
+                        <div style="font-size: 16px; font-weight: 500; color: var(--text-primary);" data-i18n="clickToUpload">Click to upload or drag and drop</div>
+                        <div style="font-size: 13px; color: var(--text-muted); margin-top: 8px;" data-i18n="supportsExcel">Supports .xlsx, .xls, .csv formats</div>
+                    </div>
+                    <input type="file" id="excelFileInput" accept=".xlsx,.xls,.csv" style="display: none;" onchange="handleExcelFileSelect(event)">
+                </div>
+                
+                <div style="background-color: var(--bg-color); border-radius: var(--radius); padding: 16px; margin-top: 16px;">
+                    <div style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;" data-i18n="excelFormatReq">📋 Excel Format Requirements:</div>
+                    <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.8;">
+                        <div data-i18n="excelFormatColA">• Column A: Question (writing prompt)</div>
+                        <div data-i18n="excelFormatColB">• Column B: Reference Answer (expected answer)</div>
+                        <div data-i18n="excelFormatHeader">• First row will be treated as header (skipped)</div>
+                        <div data-i18n="excelFormatEmpty">• Empty rows will be skipped</div>
+                    </div>
+                </div>
+
+                <div id="excelPreview" style="margin-top: 16px; display: none;">
+                    <div style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;" data-i18n="previewFirst5">🔍 Preview (First 5 rows):</div>
+                    <div style="max-height: 200px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius);">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background-color: var(--bg-color);">
+                                    <th style="padding: 8px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 12px; color: var(--text-muted);" data-i18n="questionColHeader">Question</th>
+                                    <th style="padding: 8px; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 12px; color: var(--text-muted);" data-i18n="refAnswerColHeader">Reference Answer</th>
+                                </tr>
+                            </thead>
+                            <tbody id="excelPreviewBody"></tbody>
+                        </table>
+                    </div>
+                    <div id="excelStats" style="font-size: 13px; color: var(--text-secondary); margin-top: 8px;"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeImportExcelModal()" data-i18n="cancel">Cancel</button>
+                <button class="btn btn-primary" id="confirmImportBtn" onclick="confirmImportExcel()" disabled data-i18n="importQuestions">Import Questions</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="addWordModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" data-i18n="addWordToVocab">Add Word to Vocabulary</div>
+                <button class="modal-close" onclick="closeAddWordModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label data-i18n="wordLabel">Word</label>
+                    <input type="text" id="modalWord" readonly>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="meaningLabel">Meaning</label>
+                    <input type="text" id="modalMeaning" data-i18n-placeholder="meaningInputPlaceholder" placeholder="Enter word meaning">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="exampleLabel">Example</label>
+                    <textarea id="modalExample" data-i18n-placeholder="exampleInputPlaceholder" placeholder="Enter example sentence"></textarea>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="sourceLabel">Source</label>
+                    <input type="text" id="modalSource" value="writing" readonly>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeAddWordModal()" data-i18n="cancel">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmAddWord()" data-i18n="addBtn">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="gistSyncModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title" data-i18n="gistSyncTitle">GitHub Gist Sync</div>
+                <button class="modal-close" onclick="closeGistSyncModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label data-i18n="githubTokenLabel">GitHub Personal Access Token</label>
+                    <input type="password" id="gistTokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;" data-i18n="tokenStoredLocal">Token is stored locally in your browser.</div>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="gistIdLabel">Gist ID (optional)</label>
+                    <input type="text" id="gistIdInput" data-i18n-placeholder="gistIdPlaceholder" placeholder="Leave empty to create a new gist">
+                    <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;" data-i18n="gistIdHint">If empty, a new secret gist will be created.</div>
+                </div>
+                <div id="gistSyncStatus" style="font-size: 13px; color: var(--text-secondary); margin-top: 8px; display: none;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeGistSyncModal()" data-i18n="cancel">Cancel</button>
+                <button class="btn btn-primary" onclick="pullFromGist()" data-i18n="pullFromGist">Pull from Gist</button>
+                <button class="btn btn-primary" onclick="pushToGist()" data-i18n="pushToGist">Push to Gist</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="diff-toast" id="diffToast">
+        <span>✅</span>
+        <span data-i18n="wordAddedToast">Word added to vocabulary!</span>
+    </div>
+
+    <script>
+        const Storage = {
+            _cache: {
+                questions: null,
+                writings: null,
+                vocabulary: null
+            },
+
+            KEYS: {
+                questions: 'lm_questions',
+                writings: 'lm_writings',
+                vocabulary: 'lm_vocabulary'
+            },
+
+            // ===== localStorage helpers =====
+            get(key, defaultValue = null) {
+                try {
+                    const data = localStorage.getItem(key);
+                    return data ? JSON.parse(data) : defaultValue;
+                } catch {
+                    return defaultValue;
+                }
+            },
+
+            set(key, value) {
+                try {
+                    localStorage.setItem(key, JSON.stringify(value));
+                } catch (e) {
+                    console.error('Storage error:', e);
+                }
+            },
+
+            _getList(key) {
+                return this.get(key, []);
+            },
+
+            _setList(key, list) {
+                this.set(key, list);
+            },
+
+            // ===== Questions (localStorage) =====
+            _generateId() {
+                return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
+            },
+
+            async addQuestion(question, referenceAnswer, id = null, createdAt = null) {
+                const questions = this._getList(this.KEYS.questions);
+                const newQuestion = {
+                    id: id || this._generateId(),
+                    question,
+                    referenceAnswer,
+                    createdAt: createdAt || Date.now()
+                };
+                questions.push(newQuestion);
+                this._setList(this.KEYS.questions, questions);
+                this._cache.questions = null;
+                return newQuestion.id;
+            },
+
+            async getQuestions() {
+                if (this._cache.questions) return this._cache.questions;
+                const items = this._getList(this.KEYS.questions);
+                items.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+                this._cache.questions = items;
+                return items;
+            },
+
+            async getQuestionById(id) {
+                const questions = await this.getQuestions();
+                return questions.find(q => String(q.id) === String(id));
+            },
+
+            async deleteQuestion(id) {
+                let questions = this._getList(this.KEYS.questions);
+                questions = questions.filter(q => String(q.id) !== String(id));
+                this._setList(this.KEYS.questions, questions);
+                this._cache.questions = null;
+            },
+
+            // ===== Writing Records (localStorage) =====
+            async addWriting(record) {
+                const writings = this._getList(this.KEYS.writings);
+                const newRecord = {
+                    id: Date.now().toString(),
+                    ...record,
+                    createdAt: Date.now()
+                };
+                writings.unshift(newRecord);
+                this._setList(this.KEYS.writings, writings);
+                this._cache.writings = null;
+                return newRecord.id;
+            },
+
+            async getWritings() {
+                if (this._cache.writings) return this._cache.writings;
+                const items = this._getList(this.KEYS.writings);
+                items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                this._cache.writings = items;
+                return items;
+            },
+
+            async deleteWriting(id) {
+                let writings = this._getList(this.KEYS.writings);
+                writings = writings.filter(w => String(w.id) !== String(id));
+                this._setList(this.KEYS.writings, writings);
+                this._cache.writings = null;
+            },
+
+            async clearWritings() {
+                this._setList(this.KEYS.writings, []);
+                this._cache.writings = null;
+            },
+
+            // ===== Vocabulary (localStorage) =====
+            async addVocab(word) {
+                const vocabulary = this._getList(this.KEYS.vocabulary);
+                if (vocabulary.some(v => v.word === word.word)) {
+                    return false;
+                }
+                const newVocab = {
+                    id: Date.now().toString(),
+                    ...word,
+                    status: 'review',
+                    createdAt: Date.now()
+                };
+                vocabulary.unshift(newVocab);
+                this._setList(this.KEYS.vocabulary, vocabulary);
+                this._cache.vocabulary = null;
+                return true;
+            },
+
+            async getVocabulary() {
+                if (this._cache.vocabulary) return this._cache.vocabulary;
+                const items = this._getList(this.KEYS.vocabulary);
+                items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                this._cache.vocabulary = items;
+                return items;
+            },
+
+            async updateVocabStatus(id, status) {
+                const vocabulary = this._getList(this.KEYS.vocabulary);
+                const item = vocabulary.find(v => String(v.id) === String(id));
+                if (item) {
+                    item.status = status;
+                    this._setList(this.KEYS.vocabulary, vocabulary);
+                    this._cache.vocabulary = null;
+                }
+            },
+
+            async deleteVocab(id) {
+                let vocabulary = this._getList(this.KEYS.vocabulary);
+                vocabulary = vocabulary.filter(v => String(v.id) !== String(id));
+                this._setList(this.KEYS.vocabulary, vocabulary);
+                this._cache.vocabulary = null;
+            },
+
+            invalidateCache() {
+                this._cache.questions = null;
+                this._cache.writings = null;
+                this._cache.vocabulary = null;
+            },
+
+            getSyncToken() {
+                return this.get('lm_gist_token', '');
+            },
+
+            setSyncToken(token) {
+                this.set('lm_gist_token', token);
+            },
+
+            getGistId() {
+                return this.get('lm_gist_id', '');
+            },
+
+            setGistId(gistId) {
+                this.set('lm_gist_id', gistId);
+            },
+
+            getAllData() {
+                return {
+                    questions: this._getList(this.KEYS.questions),
+                    writings: this._getList(this.KEYS.writings),
+                    vocabulary: this._getList(this.KEYS.vocabulary),
+                    exportedAt: new Date().toISOString()
+                };
+            },
+
+            setAllData(data) {
+                if (data.questions) {
+                    this._setList(this.KEYS.questions, data.questions);
+                    this._cache.questions = null;
+                }
+                if (data.writings) {
+                    this._setList(this.KEYS.writings, data.writings);
+                    this._cache.writings = null;
+                }
+                if (data.vocabulary) {
+                    this._setList(this.KEYS.vocabulary, data.vocabulary);
+                    this._cache.vocabulary = null;
+                }
+            },
+
+            // ===== GitHub Gist Sync =====
+            async syncToGist(token, gistId = null) {
+                const data = this.getAllData();
+                const content = JSON.stringify(data, null, 2);
+                const description = 'LM English Learning System Data';
+                const filename = 'lm-english-data.json';
+
+                if (gistId) {
+                    // Update existing gist
+                    const response = await fetch(`https://api.github.com/gists/${gistId}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            description,
+                            files: {
+                                [filename]: {
+                                    content
+                                }
+                            }
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(error.message || `Failed to update gist: ${response.status}`);
+                    }
+
+                    return await response.json();
+                } else {
+                    // Create new gist
+                    const response = await fetch('https://api.github.com/gists', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            description,
+                            public: false,
+                            files: {
+                                [filename]: {
+                                    content
+                                }
+                            }
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(error.message || `Failed to create gist: ${response.status}`);
+                    }
+
+                    return await response.json();
+                }
+            },
+
+            async syncFromGist(token, gistId) {
+                const response = await fetch(`https://api.github.com/gists/${gistId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.message || `Failed to fetch gist: ${response.status}`);
+                }
+
+                const gist = await response.json();
+                const filename = 'lm-english-data.json';
+                const file = gist.files[filename];
+
+                if (!file) {
+                    throw new Error('Gist does not contain lm-english-data.json');
+                }
+
+                const content = file.content;
+                const data = JSON.parse(content);
+                return data;
+            }
+        };
+
+        // ===== i18n =====
+        const i18n = {
+            current: 'en',
+            translations: {
+                en: {
+                    questionBank: 'Question Bank',
+                    questionBankDesc: 'Select a question to practice or add a new one',
+                    importExcel: 'Import Excel',
+                    gistSync: 'Gist Sync',
+                    addQuestion: 'Add Question',
+                    searchQuestions: 'Search questions...',
+                    selectQuestionFirst: 'Select a Question First',
+                    selectQuestionDesc: 'Go to Home page and choose a question to practice',
+                    goToQuestionBank: 'Go to Question Bank',
+                    prev: 'Prev',
+                    next: 'Next',
+                    question: 'Question',
+                    yourAnswer: 'Your Answer',
+                    yourAnswerDesc: 'Write your response here',
+                    typeAnswer: 'Enter your answer...',
+                    referenceAnswer: 'Reference Answer',
+                    clickToToggle: 'Click to toggle visibility',
+                    show: 'Show',
+                    hide: 'Hide',
+                    checkAnswer: 'Check Answer',
+                    backToQuestionBank: 'Back to Question Bank',
+                    viewHistory: 'View History',
+                    writingHistory: 'Writing History',
+                    writingHistoryDesc: 'Your past writing records',
+                    clearAll: 'Clear All',
+                    vocabulary: 'Vocabulary',
+                    vocabularyDesc: 'Build your word collection',
+                    wordPlaceholder: 'Word',
+                    meaningPlaceholder: 'Meaning',
+                    examplePlaceholder: 'Example sentence',
+                    addWord: 'Add Word',
+                    startFlashcardReview: 'Start Flashcard Review',
+                    searchVocabulary: 'Search vocabulary...',
+                    flashcardReview: 'Flashcard Review',
+                    clickCardToFlip: 'Click card to flip',
+                    prevCard: 'Previous',
+                    shuffle: 'Shuffle',
+                    markMastered: 'Mark Mastered',
+                    nextCard: 'Next',
+                    tabHome: 'Home',
+                    tabPractice: 'Practice',
+                    tabHistory: 'History',
+                    tabVocabulary: 'Vocabulary',
+                    tabFlashcards: 'Flashcards',
+                    addNewQuestion: 'Add New Question',
+                    questionLabel: 'Question',
+                    questionModalPlaceholder: 'Enter the writing prompt or topic...',
+                    referenceAnswerLabel: 'Reference Answer',
+                    refAnswerModalPlaceholder: 'Enter the standard or expected answer...',
+                    cancel: 'Cancel',
+                    importQuestionsFromExcel: 'Import Questions from Excel',
+                    excelFileLabel: 'Excel File (.xlsx, .xls, .csv)',
+                    clickToUpload: 'Click to upload or drag and drop',
+                    supportsExcel: 'Supports .xlsx, .xls, .csv formats',
+                    excelFormatReq: 'Excel Format Requirements:',
+                    excelFormatColA: 'Column A: Question (writing prompt)',
+                    excelFormatColB: 'Column B: Reference Answer (expected answer)',
+                    excelFormatHeader: 'First row will be treated as header (skipped)',
+                    excelFormatEmpty: 'Empty rows will be skipped',
+                    previewFirst5: 'Preview (First 5 rows):',
+                    questionColHeader: 'Question',
+                    refAnswerColHeader: 'Reference Answer',
+                    importQuestions: 'Import Questions',
+                    addWordToVocab: 'Add Word to Vocabulary',
+                    wordLabel: 'Word',
+                    meaningLabel: 'Meaning',
+                    exampleLabel: 'Example',
+                    sourceLabel: 'Source',
+                    meaningInputPlaceholder: 'Enter word meaning',
+                    exampleInputPlaceholder: 'Enter example sentence',
+                    addBtn: 'Add',
+                    gistSyncTitle: 'GitHub Gist Sync',
+                    githubTokenLabel: 'GitHub Personal Access Token',
+                    tokenStoredLocal: 'Token is stored locally in your browser.',
+                    gistIdLabel: 'Gist ID (optional)',
+                    gistIdPlaceholder: 'Leave empty to create a new gist',
+                    gistIdHint: 'If empty, a new secret gist will be created.',
+                    pullFromGist: 'Pull from Gist',
+                    pushToGist: 'Push to Gist',
+                    wordAddedToast: 'Word added to vocabulary!',
+                    practice: 'Practice',
+                    words: 'words',
+                    langToggle: '中/EN',
+                    // Dynamic alerts
+                    pleaseEnterAnswer: 'Please enter your answer',
+                    fillQuestionAndAnswer: 'Please fill both Question and Reference Answer',
+                    pleaseProvideMeaning: 'Please provide a meaning',
+                    pleaseFillWordMeaning: 'Please fill at least Word and Meaning',
+                    deleteThisQuestion: 'Are you sure you want to delete this question?',
+                    deleteThisWord: 'Are you sure you want to delete this word?',
+                    deleteThisHistory: 'Are you sure you want to delete this history record?',
+                    clearAllHistoryConfirm: 'Are you sure you want to delete ALL {count} history records? This cannot be undone.',
+                    noHistoryToDelete: 'No history records to delete.',
+                    wordAlreadyExists: 'Word already exists in vocabulary',
+                    parseExcelFailed: 'Failed to parse Excel file: ',
+                    firebaseNotReady: 'Firebase is not ready yet. Please try again later.',
+                    syncChoicePrompt: 'Click OK to upload local data to cloud.\nClick Cancel to download cloud data to local.',
+                    syncToCloudToast: 'Synced to cloud: {q} questions, {w} writings, {v} words',
+                    syncFromCloudToast: 'Synced from cloud: {q} questions, {w} writings, {v} words',
+                    syncFailed: 'Sync failed: ',
+                    dataPushedToast: 'Data pushed to GitHub Gist',
+                    dataPulledToast: 'Data pulled from GitHub Gist',
+                    importSuccessToast: 'Successfully imported {count} questions!',
+                    pleaseEnterGistToken: 'Please enter a GitHub Personal Access Token.',
+                    pleaseEnterGistId: 'Please enter a Gist ID to pull from.',
+                    pushingToGist: 'Pushing to Gist...',
+                    pullingFromGist: 'Pulling from Gist...',
+                    gistSuccess: 'Success! Gist ID: ',
+                    gistPullSuccess: 'Success! Data pulled from Gist.',
+                    gistPushFailed: 'Push failed: ',
+                    gistPullFailed: 'Pull failed: '
+                },
+                zh: {
+                    questionBank: '题库',
+                    questionBankDesc: '选择一道题目进行练习或添加新题目',
+                    importExcel: '导入Excel',
+                    gistSync: 'Gist同步',
+                    addQuestion: '添加题目',
+                    searchQuestions: '搜索题目...',
+                    selectQuestionFirst: '请先选择一道题目',
+                    selectQuestionDesc: '返回主页选择一道题目进行练习',
+                    goToQuestionBank: '前往题库',
+                    prev: '上一题',
+                    next: '下一题',
+                    question: '题目',
+                    yourAnswer: '你的答案',
+                    yourAnswerDesc: '在此输入你的回答',
+                    typeAnswer: '在此输入你的答案...',
+                    referenceAnswer: '参考答案',
+                    clickToToggle: '点击切换显示',
+                    show: '显示',
+                    hide: '隐藏',
+                    checkAnswer: '检查答案',
+                    backToQuestionBank: '返回题库',
+                    viewHistory: '查看历史',
+                    writingHistory: '写作历史',
+                    writingHistoryDesc: '你过去的写作记录',
+                    clearAll: '清空全部',
+                    vocabulary: '词汇表',
+                    vocabularyDesc: '建立你的单词收藏',
+                    wordPlaceholder: '单词',
+                    meaningPlaceholder: '释义',
+                    examplePlaceholder: '例句',
+                    addWord: '添加单词',
+                    startFlashcardReview: '开始单词卡片复习',
+                    searchVocabulary: '搜索词汇...',
+                    flashcardReview: '单词卡片复习',
+                    clickCardToFlip: '点击卡片翻面',
+                    prevCard: '上一张',
+                    shuffle: '随机',
+                    markMastered: '标记已掌握',
+                    nextCard: '下一张',
+                    tabHome: '主页',
+                    tabPractice: '练习',
+                    tabHistory: '历史',
+                    tabVocabulary: '词汇',
+                    tabFlashcards: '卡片',
+                    addNewQuestion: '添加新题目',
+                    questionLabel: '题目',
+                    questionModalPlaceholder: '输入写作题目或话题...',
+                    referenceAnswerLabel: '参考答案',
+                    refAnswerModalPlaceholder: '输入标准或期望答案...',
+                    cancel: '取消',
+                    importQuestionsFromExcel: '从Excel导入题目',
+                    excelFileLabel: 'Excel文件 (.xlsx, .xls, .csv)',
+                    clickToUpload: '点击上传或拖放文件',
+                    supportsExcel: '支持 .xlsx, .xls, .csv 格式',
+                    excelFormatReq: 'Excel格式要求：',
+                    excelFormatColA: 'A列：题目（写作提示）',
+                    excelFormatColB: 'B列：参考答案（期望答案）',
+                    excelFormatHeader: '第一行作为表头（将被跳过）',
+                    excelFormatEmpty: '空行将被跳过',
+                    previewFirst5: '预览（前5行）：',
+                    questionColHeader: '题目',
+                    refAnswerColHeader: '参考答案',
+                    importQuestions: '导入题目',
+                    addWordToVocab: '添加单词到词汇表',
+                    wordLabel: '单词',
+                    meaningLabel: '释义',
+                    exampleLabel: '例句',
+                    sourceLabel: '来源',
+                    meaningInputPlaceholder: '输入单词释义',
+                    exampleInputPlaceholder: '输入例句',
+                    addBtn: '添加',
+                    gistSyncTitle: 'GitHub Gist 同步',
+                    githubTokenLabel: 'GitHub Personal Access Token',
+                    tokenStoredLocal: 'Token仅存储在本地浏览器中。',
+                    gistIdLabel: 'Gist ID（可选）',
+                    gistIdPlaceholder: '留空则创建新的Gist',
+                    gistIdHint: '如果留空，将创建一个新的私密Gist。',
+                    pullFromGist: '从Gist拉取',
+                    pushToGist: '推送到Gist',
+                    wordAddedToast: '单词已添加到词汇表！',
+                    practice: '练习',
+                    words: '词',
+                    langToggle: 'EN/中',
+                    pleaseEnterAnswer: '请输入你的答案',
+                    fillQuestionAndAnswer: '请填写题目和参考答案',
+                    pleaseProvideMeaning: '请提供单词释义',
+                    pleaseFillWordMeaning: '请至少填写单词和释义',
+                    deleteThisQuestion: '确定要删除这道题目吗？',
+                    deleteThisWord: '确定要删除这个单词吗？',
+                    deleteThisHistory: '确定要删除这条历史记录吗？',
+                    clearAllHistoryConfirm: '确定要删除全部 {count} 条历史记录吗？此操作无法撤销。',
+                    noHistoryToDelete: '没有历史记录可删除',
+                    wordAlreadyExists: '单词已存在于词汇表中',
+                    parseExcelFailed: 'Excel文件解析失败：',
+                    firebaseNotReady: 'Firebase尚未准备好，请稍后再试',
+                    syncChoicePrompt: '点击确定上传本地数据到云端\n点击取消从云端下载数据到本地',
+                    syncToCloudToast: '同步到云端：{q} 道题目，{w} 条记录，{v} 个单词',
+                    syncFromCloudToast: '从云端同步：{q} 道题目，{w} 条记录，{v} 个单词',
+                    syncFailed: '同步失败：',
+                    dataPushedToast: '数据已推送到 GitHub Gist',
+                    dataPulledToast: '数据已从 GitHub Gist 拉取',
+                    importSuccessToast: '成功导入 {count} 道题目！',
+                    pleaseEnterGistToken: '请输入 GitHub Personal Access Token。',
+                    pleaseEnterGistId: '请输入 Gist ID 以便拉取。',
+                    pushingToGist: '正在推送到 Gist...',
+                    pullingFromGist: '正在从 Gist 拉取...',
+                    gistSuccess: '成功！Gist ID: ',
+                    gistPullSuccess: '成功！数据已从 Gist 拉取。',
+                    gistPushFailed: '推送失败：',
+                    gistPullFailed: '拉取失败：'
+                }
+            },
+            t(key, params = {}) {
+                const text = this.translations[this.current][key] || key;
+                return text.replace(/\{(\w+)\}/g, (m, k) => params[k] || m);
+            },
+            apply() {
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    el.textContent = this.t(key);
+                });
+                document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                    const key = el.getAttribute('data-i18n-placeholder');
+                    el.placeholder = this.t(key);
+                });
+            },
+            toggle() {
+                this.current = this.current === 'en' ? 'zh' : 'en';
+                localStorage.setItem('lm_language', this.current);
+                this.apply();
+                if (typeof App !== 'undefined' && App.loadQuestions) {
+                    App.loadQuestions();
+                }
+                if (typeof App !== 'undefined' && App.loadVocabulary) {
+                    App.loadVocabulary();
+                }
+            },
+            init() {
+                const saved = localStorage.getItem('lm_language');
+                if (saved && this.translations[saved]) {
+                    this.current = saved;
+                }
+                this.apply();
+            }
+        };
+
+        i18n.init();
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = 'diff-toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            requestAnimationFrame(() => {
+                toast.classList.add('show');
+            });
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        const DiffEngine = {
+            tokenize(text) {
+                const tokens = [];
+                const regex = /(\w+|[^\w\s])/g;
+                let match;
+                let lastIndex = 0;
+                while ((match = regex.exec(text)) !== null) {
+                    if (match.index > lastIndex) {
+                        tokens.push({ type: 'space', value: text.slice(lastIndex, match.index) });
+                    }
+                    tokens.push({ type: 'word', value: match[0], lower: match[0].toLowerCase() });
+                    lastIndex = regex.lastIndex;
+                }
+                if (lastIndex < text.length) {
+                    tokens.push({ type: 'space', value: text.slice(lastIndex) });
+                }
+                return tokens;
+            },
+
+            computeLCS(refWords, userWords) {
+                const m = refWords.length;
+                const n = userWords.length;
+                const dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
+
+                for (let i = 1; i <= m; i++) {
+                    for (let j = 1; j <= n; j++) {
+                        if (refWords[i - 1].lower === userWords[j - 1].lower) {
+                            dp[i][j] = dp[i - 1][j - 1] + 1;
+                        } else {
+                            dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+                        }
+                    }
+                }
+
+                const lcs = [];
+                let i = m, j = n;
+                while (i > 0 && j > 0) {
+                    if (refWords[i - 1].lower === userWords[j - 1].lower) {
+                        lcs.unshift({ refIdx: i - 1, userIdx: j - 1 });
+                        i--;
+                        j--;
+                    } else if (dp[i - 1][j] > dp[i][j - 1]) {
+                        i--;
+                    } else {
+                        j--;
+                    }
+                }
+                return lcs;
+            },
+
+            compare(reference, user) {
+                const refWords = this.tokenize(reference).filter(t => t.type === 'word');
+                const userWords = this.tokenize(user).filter(t => t.type === 'word');
+                const lcs = this.computeLCS(refWords, userWords);
+
+                const operations = [];
+                let refIdx = 0, userIdx = 0, lcsIdx = 0;
+
+                while (refIdx < refWords.length || userIdx < userWords.length) {
+                    if (lcsIdx < lcs.length && refIdx === lcs[lcsIdx].refIdx && userIdx === lcs[lcsIdx].userIdx) {
+                        operations.push({ type: 'equal', value: refWords[refIdx] });
+                        refIdx++;
+                        userIdx++;
+                        lcsIdx++;
+                    } else if (lcsIdx < lcs.length && refIdx === lcs[lcsIdx].refIdx) {
+                        operations.push({ type: 'insert', value: userWords[userIdx] });
+                        userIdx++;
+                    } else if (lcsIdx < lcs.length && userIdx === lcs[lcsIdx].userIdx) {
+                        operations.push({ type: 'delete', value: refWords[refIdx] });
+                        refIdx++;
+                    } else if (refIdx < refWords.length && userIdx < userWords.length) {
+                        operations.push({
+                            type: 'replace',
+                            deleted: refWords[refIdx],
+                            inserted: userWords[userIdx]
+                        });
+                        refIdx++;
+                        userIdx++;
+                    } else if (refIdx < refWords.length) {
+                        operations.push({ type: 'delete', value: refWords[refIdx] });
+                        refIdx++;
+                    } else {
+                        operations.push({ type: 'insert', value: userWords[userIdx] });
+                        userIdx++;
+                    }
+                }
+
+                return { operations, refWords, userWords };
+            }
+        };
+
+        const DiffRenderer = {
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            },
+
+            renderUnified(operations) {
+                return operations.map((op, idx) => {
+                    if (op.type === 'equal') {
+                        return `<span class="diff-equal">${this.escapeHtml(op.value.value)}</span>`;
+                    } else if (op.type === 'delete') {
+                        return `<span class="diff-delete diff-word" onclick="openAddWordModal('${this.escapeHtml(op.value.value)}')">${this.escapeHtml(op.value.value)}</span>`;
+                    } else if (op.type === 'insert') {
+                        return `<span class="diff-insert diff-word" onclick="openAddWordModal('${this.escapeHtml(op.value.value)}')">${this.escapeHtml(op.value.value)}</span>`;
+                    } else if (op.type === 'replace') {
+                        return `<span class="diff-replace-delete diff-word" onclick="openAddWordModal('${this.escapeHtml(op.deleted.value)}')">${this.escapeHtml(op.deleted.value)}</span><span class="diff-replace-insert diff-word" onclick="openAddWordModal('${this.escapeHtml(op.inserted.value)}')">${this.escapeHtml(op.inserted.value)}</span>`;
+                    }
+                    return '';
+                }).join(' ');
+            },
+
+            renderReference(operations) {
+                return operations.map(op => {
+                    if (op.type === 'equal') {
+                        return `<span class="diff-equal">${this.escapeHtml(op.value.value)}</span>`;
+                    } else if (op.type === 'delete') {
+                        return `<span class="diff-delete diff-word" onclick="openAddWordModal('${this.escapeHtml(op.value.value)}')">${this.escapeHtml(op.value.value)}</span>`;
+                    } else if (op.type === 'insert') {
+                        return '';
+                    } else if (op.type === 'replace') {
+                        return `<span class="diff-replace-delete diff-word" onclick="openAddWordModal('${this.escapeHtml(op.deleted.value)}')">${this.escapeHtml(op.deleted.value)}</span>`;
+                    }
+                    return '';
+                }).join(' ');
+            },
+
+            renderUser(operations) {
+                return operations.map(op => {
+                    if (op.type === 'equal') {
+                        return `<span class="diff-equal">${this.escapeHtml(op.value.value)}</span>`;
+                    } else if (op.type === 'delete') {
+                        return `<span class="diff-delete diff-word" onclick="openAddWordModal('${this.escapeHtml(op.value.value)}')">${this.escapeHtml(op.value.value)}</span>`;
+                    } else if (op.type === 'insert') {
+                        return `<span class="diff-insert diff-word" onclick="openAddWordModal('${this.escapeHtml(op.value.value)}')">${this.escapeHtml(op.value.value)}</span>`;
+                    } else if (op.type === 'replace') {
+                        return `<span class="diff-replace-insert diff-word" onclick="openAddWordModal('${this.escapeHtml(op.inserted.value)}')">${this.escapeHtml(op.inserted.value)}</span>`;
+                    }
+                    return '';
+                }).join(' ');
+            },
+
+            calculateStats(operations, totalWords) {
+                let matchedCount = 0, differentCount = 0, missingCount = 0;
+                operations.forEach(op => {
+                    if (op.type === 'equal') matchedCount++;
+                    else if (op.type === 'delete') missingCount++;
+                    else if (op.type === 'insert') differentCount++;
+                    else if (op.type === 'replace') { differentCount++; missingCount++; }
+                });
+                return { matchedCount, differentCount, missingCount, totalCount: totalWords };
+            },
+
+            renderDiffBar(operations, reference, user) {
+                const tokens = [];
+                operations.forEach((op, idx) => {
+                    if (op.type === 'equal') {
+                        tokens.push(`<span class="diff-token correct" data-word="${this.escapeHtml(op.value.value)}" data-type="correct" data-sentence="${this.escapeHtml(reference)}">${this.escapeHtml(op.value.value)}</span>`);
+                    } else if (op.type === 'delete') {
+                        tokens.push(`<span class="diff-token missing" data-word="${this.escapeHtml(op.value.value)}" data-type="missing" data-sentence="${this.escapeHtml(reference)}"><span class="token-indicator">*</span>${this.escapeHtml(op.value.value)}</span>`);
+                    } else if (op.type === 'insert') {
+                        tokens.push(`<span class="diff-token extra" data-word="${this.escapeHtml(op.value.value)}" data-type="extra" data-sentence="${this.escapeHtml(user)}">${this.escapeHtml(op.value.value)}</span>`);
+                    } else if (op.type === 'replace') {
+                        tokens.push(`<span class="diff-token replace-delete" data-word="${this.escapeHtml(op.deleted.value)}" data-type="missing" data-sentence="${this.escapeHtml(reference)}">${this.escapeHtml(op.deleted.value)}</span>`);
+                        tokens.push(`<span class="diff-token replace-insert" data-word="${this.escapeHtml(op.inserted.value)}" data-type="incorrect" data-sentence="${this.escapeHtml(user)}"><span class="token-indicator">+</span>${this.escapeHtml(op.inserted.value)}</span>`);
+                    }
+                });
+                return tokens.join('');
+            },
+
+            renderAnswerCard(text, operations, side) {
+                if (side === 'user') {
+                    const result = [];
+                    operations.forEach(op => {
+                        if (op.type === 'equal') {
+                            result.push(`<span>${this.escapeHtml(op.value.value)}</span>`);
+                        } else if (op.type === 'delete') {
+                            result.push('');
+                        } else if (op.type === 'insert') {
+                            result.push(`<span>${this.escapeHtml(op.value.value)}</span>`);
+                        } else if (op.type === 'replace') {
+                            result.push(`<span>${this.escapeHtml(op.inserted.value)}</span>`);
+                        }
+                    });
+                    return result.join(' ');
+                } else {
+                    const result = [];
+                    operations.forEach(op => {
+                        if (op.type === 'equal') {
+                            result.push(`<span>${this.escapeHtml(op.value.value)}</span>`);
+                        } else if (op.type === 'delete') {
+                            result.push(`<span>${this.escapeHtml(op.value.value)}</span>`);
+                        } else if (op.type === 'insert') {
+                            result.push('');
+                        } else if (op.type === 'replace') {
+                            result.push(`<span>${this.escapeHtml(op.deleted.value)}</span>`);
+                        }
+                    });
+                    return result.join(' ');
+                }
+            },
+
+            getTokenizedDiff(operations) {
+                const tokens = [];
+                operations.forEach(op => {
+                    if (op.type === 'equal') {
+                        tokens.push({ text: op.value.value, type: 'correct' });
+                    } else if (op.type === 'delete') {
+                        tokens.push({ text: op.value.value, type: 'missing' });
+                    } else if (op.type === 'insert') {
+                        tokens.push({ text: op.value.value, type: 'extra' });
+                    } else if (op.type === 'replace') {
+                        tokens.push({ text: op.deleted.value, type: 'missing' });
+                        tokens.push({ text: op.inserted.value, type: 'incorrect' });
+                    }
+                });
+                return tokens;
+            }
+        };
+
+        const App = {
+            currentQuestion: null,
+            currentTheme: 'default',
+
+            async init() {
+                this.initTheme();
+                this.bindTabEvents();
+                this.bindPracticeEvents();
+                this.bindVocabEvents();
+                this.bindFlashcardEvents();
+                await this.loadQuestions();
+                await this.loadHistory();
+                await this.loadVocabulary();
+            },
+
+            initTheme() {
+                const savedTheme = Storage.get('lm_theme') || 'default';
+                this.currentTheme = savedTheme;
+                this.applyTheme(savedTheme);
+                
+                document.getElementById('themeToggle').addEventListener('click', () => {
+                    this.toggleTheme();
+                });
+            },
+
+            toggleTheme() {
+                const newTheme = this.currentTheme === 'default' ? 'ink' : 'default';
+                this.currentTheme = newTheme;
+                this.applyTheme(newTheme);
+                Storage.set('lm_theme', newTheme);
+            },
+
+            applyTheme(theme) {
+                document.body.classList.remove('theme-default', 'theme-ink');
+                document.body.classList.add(`theme-${theme}`);
+                
+                const icon = document.getElementById('themeIcon');
+                const label = document.getElementById('themeLabel');
+                
+                if (theme === 'ink') {
+                    icon.textContent = '🌈';
+                    label.textContent = 'Color Mode';
+                } else {
+                    icon.textContent = '🌓';
+                    label.textContent = 'Ink Mode';
+                }
+            },
+
+            bindTabEvents() {
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                        tab.classList.add('active');
+                        document.getElementById(tab.dataset.page).classList.add('active');
+
+                        if (tab.dataset.page === 'home') {
+                            this.loadQuestions();
+                        } else if (tab.dataset.page === 'flashcards') {
+                            this.initFlashcards();
+                        }
+                    });
+                });
+            },
+
+            bindPracticeEvents() {
+                document.getElementById('practiceCheckBtn').addEventListener('click', () => this.handlePracticeCheck());
+                
+                document.getElementById('practiceDiffBar').addEventListener('click', (e) => {
+                    const token = e.target.closest('.diff-token');
+                    if (token) {
+                        const word = token.dataset.word;
+                        const type = token.dataset.type;
+                        const sentence = token.dataset.sentence;
+                        
+                        if (word) {
+                            this.handleDiffTokenClick(word, type, sentence, token);
+                        }
+                    }
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    const practicePage = document.getElementById('practice');
+                    if (!practicePage.classList.contains('active')) return;
+                    if (!this.currentQuestion) return;
+
+                    if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
+
+                    if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        this.prevQuestion();
+                    } else if (e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        this.nextQuestion();
+                    }
+                });
+            },
+
+            handleDiffTokenClick(word, type, sentence, token) {
+                Storage.addVocab({
+                    word,
+                    meaning: '',
+                    example: sentence,
+                    from: 'writing_diff',
+                    errorType: type
+                }).then(success => {
+                    if (success) {
+                        token.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            token.style.transform = '';
+                        }, 150);
+
+                        const toast = document.getElementById('diffToast');
+                        toast.classList.add('show');
+                        setTimeout(() => {
+                            toast.classList.remove('show');
+                        }, 2000);
+
+                        this.loadVocabulary();
+                    }
+                });
+            },
+
+            async loadQuestions() {
+                const questions = await Storage.getQuestions();
+                const filter = document.getElementById('questionFilter')?.value?.toLowerCase() || '';
+                const grid = document.getElementById('questionGrid');
+
+                let filteredQuestions = questions;
+                if (filter) {
+                    filteredQuestions = questions.filter(q => 
+                        q.question.toLowerCase().includes(filter) ||
+                        q.referenceAnswer.toLowerCase().includes(filter)
+                    );
+                }
+
+                if (filteredQuestions.length === 0) {
+                    grid.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1 / -1;">
+                            <div class="empty-state-icon">📝</div>
+                            <div class="empty-state-title">${filter ? 'No Matching Questions' : 'No Questions Yet'}</div>
+                            <div class="empty-state-desc">${filter ? 'Try a different search term' : 'Click "Add Question" to create your first writing prompt'}</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const groups = filteredQuestions.reduce((acc, q) => {
+                    const date = new Date(q.createdAt);
+                    const groupKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                    if (!acc[groupKey]) {
+                        acc[groupKey] = [];
+                    }
+                    acc[groupKey].push(q);
+                    return acc;
+                }, {});
+
+                const sortedGroupKeys = Object.keys(groups).sort((a, b) => b.localeCompare(a));
+
+                let html = '';
+                sortedGroupKeys.forEach((key, idx) => {
+                    const [year, month] = key.split('-');
+                    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                    const monthName = monthNames[parseInt(month) - 1];
+                    const groupQuestions = groups[key];
+
+                    html += `
+                        <div class="group-header" onclick="toggleQuestionGroup(${idx})" style="grid-column: 1 / -1;">
+                            <span class="group-header-icon" id="questionGroupIcon-${idx}">▶</span>
+                            <span class="group-header-title">${monthName} ${year}</span>
+                            <span class="group-header-count">${groupQuestions.length} questions</span>
+                        </div>
+                        <div class="group-content expanded" id="questionGroup-${idx}" style="grid-column: 1 / -1;">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+                                ${groupQuestions.map(q => {
+                                    const date = new Date(q.createdAt);
+                                    const dateStr = date.toLocaleDateString('en-US', {
+                                        month: 'short', day: 'numeric', year: 'numeric'
+                                    });
+                                    return `
+                                        <div class="question-card">
+                                            <div class="question-card-content">
+                                                <div class="question-card-title">${q.question}</div>
+                                                <div class="question-card-meta">
+                                                    <span>📅 ${dateStr}</span>
+                                                    <span>📝 ${q.referenceAnswer.split(' ').length} ${i18n.t('words')}</span>
+                                                </div>
+                                            </div>
+                                            <div class="question-card-actions">
+                                                <button class="btn btn-primary btn-sm" onclick="selectQuestion('${q.id}')">
+                                                    <span>✍️</span>
+                                                    <span>${i18n.t('practice')}</span>
+                                                </button>
+                                                <button class="btn btn-danger btn-sm" onclick="deleteQuestion('${q.id}')">
+                                                    <span>🗑️</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                grid.innerHTML = html;
+            },
+
+            async selectQuestion(questionId, switchTab = true) {
+                const questions = await Storage.getQuestions();
+                this._cachedQuestions = questions;
+
+                const question = questions.find(q => String(q.id) === String(questionId));
+                if (!question) {
+                    console.error('Question not found:', questionId);
+                    return;
+                }
+
+                this.currentQuestion = question;
+
+                document.getElementById('practiceQuestion').textContent = question.question;
+                document.getElementById('practiceReference').textContent = question.referenceAnswer;
+                document.getElementById('practiceUserAnswer').value = '';
+
+                document.getElementById('practiceEmptyState').style.display = 'none';
+                document.getElementById('practiceContent').style.display = 'block';
+
+                document.getElementById('practiceReference').style.display = 'none';
+                document.getElementById('refToggleText').textContent = 'Show';
+                document.getElementById('refToggleIcon').textContent = '👁️';
+
+                const results = document.getElementById('practiceResults');
+                results.classList.remove('show');
+                results.style.display = 'none';
+
+                document.getElementById('practiceDiffBar').innerHTML = '';
+                document.getElementById('practiceUserCard').innerHTML = '';
+                document.getElementById('practiceReferenceCard').innerHTML = '';
+                document.getElementById('practiceScoreBadge').textContent = 'Score: 0%';
+                document.getElementById('practiceProgressFill').style.width = '0%';
+                document.getElementById('practiceMatchedCount').textContent = '0';
+                document.getElementById('practiceDifferentCount').textContent = '0';
+                document.getElementById('practiceMissingCount').textContent = '0';
+                document.getElementById('practiceTotalCount').textContent = '0';
+
+                if (switchTab) {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                    document.querySelector('.tab[data-page="practice"]').classList.add('active');
+                    document.getElementById('practice').classList.add('active');
+                }
+
+                this.updateQuestionNav();
+            },
+
+            getCurrentQuestionIndex() {
+                if (!this._cachedQuestions || this._cachedQuestions.length === 0) return -1;
+                if (!this.currentQuestion) return -1;
+                const idx = this._cachedQuestions.findIndex(q => String(q.id) === String(this.currentQuestion.id));
+                return idx;
+            },
+
+            updateQuestionNav() {
+                const questions = this._cachedQuestions || [];
+                const total = questions.length;
+                const currentIndex = this.getCurrentQuestionIndex();
+                const displayIndex = currentIndex >= 0 ? currentIndex : 0;
+
+                const currentIdxEl = document.getElementById('questionCurrentIndex');
+                const totalCountEl = document.getElementById('questionTotalCount');
+                const cardIdxEl = document.getElementById('questionCardIndex');
+                const cardTotalEl = document.getElementById('questionCardTotal');
+
+                if (currentIdxEl) currentIdxEl.textContent = displayIndex + 1;
+                if (totalCountEl) totalCountEl.textContent = total;
+                if (cardIdxEl) cardIdxEl.textContent = displayIndex + 1;
+                if (cardTotalEl) cardTotalEl.textContent = total;
+
+                const prevBtn = document.getElementById('prevQuestionBtn');
+                const nextBtn = document.getElementById('nextQuestionBtn');
+                const prevCardBtn = document.getElementById('prevQuestionCardBtn');
+                const nextCardBtn = document.getElementById('nextQuestionCardBtn');
+                const prevBottomBtn = document.getElementById('prevQuestionBottomBtn');
+                const nextBottomBtn = document.getElementById('nextQuestionBottomBtn');
+
+                const isFirst = currentIndex <= 0 || total === 0;
+                const isLast = currentIndex >= total - 1 || total === 0;
+
+                if (prevBtn) prevBtn.disabled = isFirst;
+                if (nextBtn) nextBtn.disabled = isLast;
+                if (prevCardBtn) prevCardBtn.disabled = isFirst;
+                if (nextCardBtn) nextCardBtn.disabled = isLast;
+                if (prevBottomBtn) prevBottomBtn.disabled = isFirst;
+                if (nextBottomBtn) nextBottomBtn.disabled = isLast;
+            },
+
+            async prevQuestion() {
+                const questions = await Storage.getQuestions();
+                this._cachedQuestions = questions;
+                if (questions.length === 0) return;
+
+                let currentIndex = this.getCurrentQuestionIndex();
+                if (currentIndex === -1) {
+                    await this.selectQuestion(questions[0].id, false);
+                    return;
+                }
+                if (currentIndex <= 0) return;
+
+                const prevQ = questions[currentIndex - 1];
+                if (prevQ) {
+                    await this.selectQuestion(prevQ.id, false);
+                }
+            },
+
+            async nextQuestion() {
+                const questions = await Storage.getQuestions();
+                this._cachedQuestions = questions;
+                if (questions.length === 0) return;
+
+                let currentIndex = this.getCurrentQuestionIndex();
+                if (currentIndex === -1) {
+                    await this.selectQuestion(questions[0].id, false);
+                    return;
+                }
+                if (currentIndex >= questions.length - 1) return;
+
+                const nextQ = questions[currentIndex + 1];
+                if (nextQ) {
+                    await this.selectQuestion(nextQ.id, false);
+                }
+            },
+
+            async handlePracticeCheck() {
+                if (!this.currentQuestion) return;
+
+                const userAnswer = document.getElementById('practiceUserAnswer').value.trim();
+                const reference = this.currentQuestion.referenceAnswer;
+
+                if (!userAnswer) {
+                    alert(i18n.t('pleaseEnterAnswer'));
+                    return;
+                }
+
+                const result = DiffEngine.compare(reference, userAnswer);
+                const stats = DiffRenderer.calculateStats(result.operations, result.refWords.length);
+                const score = stats.totalCount > 0 ? Math.round((stats.matchedCount / stats.totalCount) * 100) : 0;
+
+                this.renderPracticeResults(result, stats, score);
+
+                await Storage.addWriting({
+                    questionId: this.currentQuestion.id,
+                    question: this.currentQuestion.question,
+                    referenceAnswer: reference,
+                    userAnswer: userAnswer,
+                    diffResult: {
+                        operations: result.operations,
+                        stats,
+                        score
+                    }
+                });
+
+                setTimeout(() => {
+                    document.getElementById('practiceResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            },
+
+            renderPracticeResults(result, stats, score) {
+                const reference = this.currentQuestion.referenceAnswer;
+                const userAnswer = document.getElementById('practiceUserAnswer').value.trim();
+
+                const diffBarHtml = DiffRenderer.renderDiffBar(result.operations, reference, userAnswer);
+                const userCardHtml = DiffRenderer.renderAnswerCard(userAnswer, result.operations, 'user');
+                const referenceCardHtml = DiffRenderer.renderAnswerCard(reference, result.operations, 'reference');
+
+                document.getElementById('practiceDiffBar').innerHTML = diffBarHtml;
+                document.getElementById('practiceUserCard').innerHTML = userCardHtml;
+                document.getElementById('practiceReferenceCard').innerHTML = referenceCardHtml;
+
+                document.getElementById('practiceMatchedCount').textContent = stats.matchedCount;
+                document.getElementById('practiceDifferentCount').textContent = stats.differentCount;
+                document.getElementById('practiceMissingCount').textContent = stats.missingCount;
+                document.getElementById('practiceTotalCount').textContent = stats.totalCount;
+
+                const scoreBadge = document.getElementById('practiceScoreBadge');
+                const progressFill = document.getElementById('practiceProgressFill');
+
+                scoreBadge.textContent = `Score: ${score}%`;
+                const scoreClass = score >= 80 ? 'good' : score >= 50 ? 'medium' : 'low';
+                scoreBadge.className = `score-badge score-${scoreClass}`;
+                progressFill.className = `progress-fill progress-${scoreClass}`;
+                progressFill.style.width = `${score}%`;
+
+                const results = document.getElementById('practiceResults');
+                results.style.display = 'block';
+                results.classList.add('show');
+            },
+
+            bindVocabEvents() {
+                document.getElementById('addWordBtn').addEventListener('click', async () => {
+                    const word = document.getElementById('newWord').value.trim();
+                    const meaning = document.getElementById('newMeaning').value.trim();
+                    const example = document.getElementById('newExample').value.trim();
+
+                    if (word && meaning) {
+                        await Storage.addVocab({ word, meaning, example, from: 'manual' });
+                        document.getElementById('newWord').value = '';
+                        document.getElementById('newMeaning').value = '';
+                        document.getElementById('newExample').value = '';
+                        this.loadVocabulary();
+                    } else {
+                        alert(i18n.t('pleaseFillWordMeaning'));
+                    }
+                });
+            },
+
+            bindFlashcardEvents() {
+                document.getElementById('prevCardBtn').addEventListener('click', () => this.prevCard());
+                document.getElementById('nextCardBtn').addEventListener('click', () => this.nextCard());
+                document.getElementById('shuffleBtn').addEventListener('click', () => this.shuffleCards());
+                document.getElementById('markMasteredBtn').addEventListener('click', () => this.markCardMastered());
+            },
+
+            async loadHistory() {
+                const records = await Storage.getWritings();
+                const list = document.getElementById('historyList');
+
+                if (records.length === 0) {
+                    list.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📝</div>
+                            <div class="empty-state-title">No Writing Records</div>
+                            <div class="empty-state-desc">Start writing to save your first record</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                list.innerHTML = records.map(record => {
+                    const date = new Date(record.createdAt);
+                    const dateStr = date.toLocaleDateString('en-US', {
+                        month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                    });
+                    const scoreClass = record.diffResult.score >= 80 ? 'score-good' : record.diffResult.score >= 50 ? 'score-medium' : 'score-low';
+
+                    return `
+                        <div class="history-item" onclick="toggleHistoryDetail(${record.id})">
+                            <div class="history-item-header">
+                                <div class="history-question">${record.question || 'Untitled Question'}</div>
+                                <span class="history-score ${scoreClass}">${record.diffResult.score}%</span>
+                            </div>
+                            <div class="history-meta">
+                                <span>${dateStr}</span>
+                                <span>Words: ${record.diffResult.stats.totalCount}</span>
+                            </div>
+                            <div class="history-detail" id="historyDetail-${record.id}">
+                                <div style="margin-bottom: 12px;">
+                                    <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Reference Answer</div>
+                                    <div style="font-size: 14px; padding: 8px; background-color: var(--bg-color); border-radius: var(--radius-xs);">${record.referenceAnswer}</div>
+                                </div>
+                                <div style="margin-bottom: 12px;">
+                                    <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Your Answer</div>
+                                    <div style="font-size: 14px; padding: 8px; background-color: var(--bg-color); border-radius: var(--radius-xs);">${record.userAnswer}</div>
+                                </div>
+                                <div class="diff-container" style="margin-bottom: 12px;">
+                                    <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px;">Diff Result</div>
+                                    <div class="diff-text">${DiffRenderer.renderUnified(record.diffResult.operations)}</div>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation(); reopenWriting(${record.id})">Re-open</button>
+                                    <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); deleteHistoryItem(${record.id})">🗑️ Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            },
+
+            async loadVocabulary() {
+                const words = await Storage.getVocabulary();
+                const filter = document.getElementById('vocabFilter')?.value?.toLowerCase() || '';
+                const list = document.getElementById('vocabList');
+
+                let filteredWords = words;
+                if (filter) {
+                    filteredWords = words.filter(word => 
+                        word.word.toLowerCase().includes(filter) ||
+                        word.meaning.toLowerCase().includes(filter) ||
+                        word.example.toLowerCase().includes(filter)
+                    );
+                }
+
+                if (filteredWords.length === 0) {
+                    list.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📚</div>
+                            <div class="empty-state-title">${filter ? 'No Matching Vocabulary' : 'No Vocabulary'}</div>
+                            <div class="empty-state-desc">${filter ? 'Try a different search term' : 'Add words from your writing or manually'}</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const groups = filteredWords.reduce((acc, word) => {
+                    const date = new Date(word.createdAt || Date.now());
+                    const groupKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                    if (!acc[groupKey]) {
+                        acc[groupKey] = [];
+                    }
+                    acc[groupKey].push(word);
+                    return acc;
+                }, {});
+
+                const sortedGroupKeys = Object.keys(groups).sort((a, b) => b.localeCompare(a));
+
+                let html = '';
+                sortedGroupKeys.forEach((key, idx) => {
+                    const [year, month] = key.split('-');
+                    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                    const monthName = monthNames[parseInt(month) - 1];
+                    const groupWords = groups[key];
+
+                    html += `
+                        <div class="group-header" onclick="toggleVocabGroup(${idx})">
+                            <span class="group-header-icon" id="vocabGroupIcon-${idx}">▶</span>
+                            <span class="group-header-title">${monthName} ${year}</span>
+                            <span class="group-header-count">${groupWords.length} words</span>
+                        </div>
+                        <div class="group-content expanded" id="vocabGroup-${idx}">
+                            ${groupWords.map(word => {
+                                const isInk = document.body.classList.contains('theme-ink');
+                                const statusClass = word.status === 'mastered' ? 'status-mastered' : 
+                                                   word.status === 'weak' ? 'status-weak' : 'status-review';
+                                const statusText = isInk 
+                                    ? (word.status === 'mastered' ? '✔ Mastered' : 
+                                       word.status === 'weak' ? '✕ Weak' : '○ Learning')
+                                    : (word.status === 'mastered' ? 'Mastered' : 
+                                       word.status === 'weak' ? 'Weak' : 'Need Review');
+                                return `
+                            <div class="vocab-item">
+                                <div>
+                                    <span class="vocab-word">${word.word}</span>
+                                    <span class="vocab-status ${statusClass}">${statusText}</span>
+                                </div>
+                                <div class="vocab-info">
+                                    <div class="vocab-meaning">${word.meaning}</div>
+                                    ${word.example ? `<div class="vocab-example">"${word.example}"</div>` : ''}
+                                    <div class="vocab-from">From: ${word.from}</div>
+                                </div>
+                                <div class="vocab-actions">
+                                    <button class="btn btn-sm ${word.status === 'mastered' ? 'btn-secondary' : 'btn-success'}" onclick="toggleVocabStatus(${word.id})">
+                                        ${word.status === 'mastered' ? '↺ Review' : '✅ Master'}
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteVocab(${word.id})">🗑️</button>
+                                </div>
+                            </div>
+                        `;
+                            }).join('')}
+                        </div>
+                    `;
+                });
+
+                list.innerHTML = html;
+            },
+
+            flashcards: [],
+            currentCardIndex: 0,
+
+            async initFlashcards() {
+                const allWords = await Storage.getVocabulary();
+                const words = allWords.filter(w => w.status !== 'mastered');
+                this.flashcards = words.length > 0 ? words : allWords;
+                this.currentCardIndex = 0;
+                this.renderFlashcard();
+            },
+
+            renderFlashcard() {
+                const container = document.getElementById('flashcardContainer');
+
+                if (this.flashcards.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🎴</div>
+                            <div class="empty-state-title">No Cards to Review</div>
+                            <div class="empty-state-desc">Add words to your vocabulary first</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const word = this.flashcards[this.currentCardIndex];
+                container.innerHTML = `
+                    <div class="flashcard" onclick="flipCard()">
+                        <div class="flashcard-face flashcard-front">
+                            <div class="flashcard-word">${word.word}</div>
+                            <div class="flashcard-hint">Click to flip</div>
+                        </div>
+                        <div class="flashcard-face flashcard-back">
+                            <div class="flashcard-meaning">${word.meaning}</div>
+                            ${word.example ? `<div class="flashcard-example">"${word.example}"</div>` : ''}
+                        </div>
+                    </div>
+                    <div style="margin-top: 16px; font-size: 14px; color: var(--text-muted);">
+                        ${this.currentCardIndex + 1} / ${this.flashcards.length}
+                    </div>
+                `;
+            },
+
+            nextCard() {
+                if (this.flashcards.length === 0) return;
+                this.currentCardIndex = (this.currentCardIndex + 1) % this.flashcards.length;
+                this.renderFlashcard();
+            },
+
+            prevCard() {
+                if (this.flashcards.length === 0) return;
+                this.currentCardIndex = (this.currentCardIndex - 1 + this.flashcards.length) % this.flashcards.length;
+                this.renderFlashcard();
+            },
+
+            shuffleCards() {
+                this.flashcards.sort(() => Math.random() - 0.5);
+                this.currentCardIndex = 0;
+                this.renderFlashcard();
+            },
+
+            async markCardMastered() {
+                if (this.flashcards.length === 0) return;
+                const word = this.flashcards[this.currentCardIndex];
+                await Storage.updateVocabStatus(word.id, 'mastered');
+                this.flashcards = this.flashcards.filter(w => w.id !== word.id);
+
+                if (this.flashcards.length === 0) {
+                    const allWords = await Storage.getVocabulary();
+                    this.flashcards = allWords;
+                }
+
+                this.currentCardIndex = Math.min(this.currentCardIndex, this.flashcards.length - 1);
+                this.renderFlashcard();
+                this.loadVocabulary();
+            }
+        };
+
+        function toggleHistoryDetail(id) {
+            const detail = document.getElementById(`historyDetail-${id}`);
+            if (detail) detail.classList.toggle('show');
+        }
+
+        async function reopenWriting(id) {
+            const records = await Storage.getWritings();
+            const record = records.find(r => String(r.id) === String(id));
+            if (record) {
+                document.getElementById('question').value = record.question;
+                document.getElementById('referenceAnswer').value = record.referenceAnswer;
+                document.getElementById('userAnswer').value = record.userAnswer;
+
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.querySelector('.tab[data-page="writing"]').classList.add('active');
+                document.getElementById('writing').classList.add('active');
+
+                const result = DiffEngine.compare(record.referenceAnswer, record.userAnswer);
+                const stats = DiffRenderer.calculateStats(result.operations, result.refWords.length);
+                const score = stats.totalCount > 0 ? Math.round((stats.matchedCount / stats.totalCount) * 100) : 0;
+
+                App.renderWritingResults(result, stats, score);
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        async function toggleVocabStatus(id) {
+            const words = await Storage.getVocabulary();
+            const word = words.find(w => String(w.id) === String(id));
+            if (word) {
+                await Storage.updateVocabStatus(id, word.status === 'mastered' ? 'review' : 'mastered');
+                App.loadVocabulary();
+            }
+        }
+
+        async function deleteVocab(id) {
+            if (confirm(i18n.t('deleteThisWord'))) {
+                await Storage.deleteVocab(id);
+                App.loadVocabulary();
+            }
+        }
+
+        async function deleteHistoryItem(id) {
+            if (confirm(i18n.t('deleteThisHistory'))) {
+                await Storage.deleteWriting(id);
+                App.loadHistory();
+            }
+        }
+
+        async function clearAllHistory() {
+            const records = await Storage.getWritings();
+            if (records.length === 0) {
+                alert(i18n.t('noHistoryToDelete'));
+                return;
+            }
+            if (confirm(i18n.t('clearAllHistoryConfirm', { count: records.length }))) {
+                await Storage.clearWritings();
+                App.loadHistory();
+            }
+        }
+
+        function toggleQuestionGroup(index) {
+            const content = document.getElementById(`questionGroup-${index}`);
+            const icon = document.getElementById(`questionGroupIcon-${index}`);
+            if (content && icon) {
+                if (content.classList.contains('expanded')) {
+                    content.classList.remove('expanded');
+                    content.classList.add('collapsed');
+                    icon.classList.add('collapsed');
+                } else {
+                    content.classList.remove('collapsed');
+                    content.classList.add('expanded');
+                    icon.classList.remove('collapsed');
+                }
+            }
+        }
+
+        function toggleVocabGroup(index) {
+            const content = document.getElementById(`vocabGroup-${index}`);
+            const icon = document.getElementById(`vocabGroupIcon-${index}`);
+            if (content && icon) {
+                if (content.classList.contains('expanded')) {
+                    content.classList.remove('expanded');
+                    content.classList.add('collapsed');
+                    icon.classList.add('collapsed');
+                } else {
+                    content.classList.remove('collapsed');
+                    content.classList.add('expanded');
+                    icon.classList.remove('collapsed');
+                }
+            }
+        }
+
+        let currentWordToAdd = '';
+
+        function openAddWordModal(word) {
+            currentWordToAdd = word;
+            document.getElementById('modalWord').value = word;
+            document.getElementById('modalMeaning').value = '';
+            document.getElementById('modalExample').value = '';
+            document.getElementById('addWordModal').classList.add('show');
+        }
+
+        function closeAddWordModal() {
+            document.getElementById('addWordModal').classList.remove('show');
+            currentWordToAdd = '';
+        }
+
+        function confirmAddWord() {
+            const meaning = document.getElementById('modalMeaning').value.trim();
+            const example = document.getElementById('modalExample').value.trim();
+
+            if (currentWordToAdd && meaning) {
+                Storage.addVocab({
+                    word: currentWordToAdd,
+                    meaning,
+                    example,
+                    from: 'writing'
+                }).then(success => {
+                    if (success) {
+                        alert(i18n.t('wordAddedToast'));
+                    } else {
+                        alert(i18n.t('wordAlreadyExists'));
+                    }
+                    closeAddWordModal();
+                    App.loadVocabulary();
+                });
+            } else {
+                alert(i18n.t('pleaseProvideMeaning'));
+            }
+        }
+
+        function flipCard() {
+            const card = document.querySelector('.flashcard');
+            if (card) card.classList.toggle('flipped');
+        }
+
+        function switchToVocabulary() {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelector('.tab[data-page="vocabulary"]').classList.add('active');
+            document.getElementById('vocabulary').classList.add('active');
+            App.loadVocabulary();
+        }
+
+        function switchToHistory() {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelector('.tab[data-page="history"]').classList.add('active');
+            document.getElementById('history').classList.add('active');
+            App.loadHistory();
+        }
+
+        function switchToFlashcards() {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelector('.tab[data-page="flashcards"]').classList.add('active');
+            document.getElementById('flashcards').classList.add('active');
+            App.initFlashcards();
+        }
+
+        function switchToHome() {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelector('.tab[data-page="home"]').classList.add('active');
+            document.getElementById('home').classList.add('active');
+            App.loadQuestions();
+        }
+
+        async function syncData() {
+            if (!window.firebaseReady || !window.db) {
+                alert(i18n.t('firebaseNotReady'));
+                return;
+            }
+
+            const choice = confirm(i18n.t('syncChoicePrompt'));
+            try {
+                if (choice) {
+                    const result = await Storage.syncToCloud();
+                    showToast(i18n.t('syncToCloudToast', { q: result.questions, w: result.writings, v: result.vocabulary }));
+                } else {
+                    const result = await Storage.syncFromCloud();
+                    App.loadQuestions();
+                    App.loadHistory();
+                    App.loadVocabulary();
+                    showToast(i18n.t('syncFromCloudToast', { q: result.questions, w: result.writings, v: result.vocabulary }));
+                }
+            } catch (error) {
+                console.error('Sync failed:', error);
+                alert(i18n.t('syncFailed') + error.message);
+            }
+        }
+
+        function openGistSyncModal() {
+            document.getElementById('gistTokenInput').value = Storage.getSyncToken();
+            document.getElementById('gistIdInput').value = Storage.getGistId();
+            document.getElementById('gistSyncStatus').style.display = 'none';
+            document.getElementById('gistSyncModal').classList.add('show');
+        }
+
+        function closeGistSyncModal() {
+            document.getElementById('gistSyncModal').classList.remove('show');
+        }
+
+        function setGistSyncStatus(message, isError = false) {
+            const statusEl = document.getElementById('gistSyncStatus');
+            statusEl.textContent = message;
+            statusEl.style.color = isError ? 'var(--error-color)' : 'var(--text-secondary)';
+            statusEl.style.display = 'block';
+        }
+
+        async function pushToGist() {
+            const token = document.getElementById('gistTokenInput').value.trim();
+            let gistId = document.getElementById('gistIdInput').value.trim();
+
+            if (!token) {
+                setGistSyncStatus(i18n.t('pleaseEnterGistToken'), true);
+                return;
+            }
+
+            Storage.setSyncToken(token);
+            setGistSyncStatus(i18n.t('pushingToGist'));
+
+            try {
+                const result = await Storage.syncToGist(token, gistId || null);
+                Storage.setGistId(result.id);
+                document.getElementById('gistIdInput').value = result.id;
+                setGistSyncStatus(i18n.t('gistSuccess') + result.id);
+                showToast(i18n.t('dataPushedToast'));
+            } catch (error) {
+                console.error('Push to Gist failed:', error);
+                setGistSyncStatus(i18n.t('gistPushFailed') + error.message, true);
+            }
+        }
+
+        async function pullFromGist() {
+            const token = document.getElementById('gistTokenInput').value.trim();
+            const gistId = document.getElementById('gistIdInput').value.trim();
+
+            if (!token) {
+                setGistSyncStatus(i18n.t('pleaseEnterGistToken'), true);
+                return;
+            }
+            if (!gistId) {
+                setGistSyncStatus(i18n.t('pleaseEnterGistId'), true);
+                return;
+            }
+
+            Storage.setSyncToken(token);
+            setGistSyncStatus(i18n.t('pullingFromGist'));
+
+            try {
+                const data = await Storage.syncFromGist(token, gistId);
+                Storage.setGistId(gistId);
+                Storage.setAllData(data);
+                App.loadQuestions();
+                App.loadHistory();
+                App.loadVocabulary();
+                setGistSyncStatus(i18n.t('gistPullSuccess'));
+                showToast(i18n.t('dataPulledToast'));
+            } catch (error) {
+                console.error('Pull from Gist failed:', error);
+                setGistSyncStatus(i18n.t('gistPullFailed') + error.message, true);
+            }
+        }
+
+        function openAddQuestionModal() {
+            document.getElementById('modalQuestion').value = '';
+            document.getElementById('modalReferenceAnswer').value = '';
+            document.getElementById('addQuestionModal').classList.add('show');
+        }
+
+        function closeAddQuestionModal() {
+            document.getElementById('addQuestionModal').classList.remove('show');
+        }
+
+        let importedQuestions = [];
+
+        function openImportExcelModal() {
+            importedQuestions = [];
+            document.getElementById('excelFileInput').value = '';
+            document.getElementById('excelPreview').style.display = 'none';
+            document.getElementById('confirmImportBtn').disabled = true;
+            document.getElementById('importExcelModal').classList.add('show');
+        }
+
+        function closeImportExcelModal() {
+            document.getElementById('importExcelModal').classList.remove('show');
+        }
+
+        function handleExcelFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[sheetName];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: ['question', 'referenceAnswer'] });
+
+                    importedQuestions = jsonData.slice(1).filter(row => {
+                        return row.question && row.referenceAnswer && 
+                               String(row.question).trim() !== '' && 
+                               String(row.referenceAnswer).trim() !== '';
+                    }).map(row => ({
+                        question: String(row.question).trim(),
+                        referenceAnswer: String(row.referenceAnswer).trim()
+                    }));
+
+                    renderExcelPreview();
+                } catch (error) {
+                    alert(i18n.t('parseExcelFailed') + error.message);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function renderExcelPreview() {
+            const previewBody = document.getElementById('excelPreviewBody');
+            const preview = document.getElementById('excelPreview');
+            const confirmBtn = document.getElementById('confirmImportBtn');
+            const stats = document.getElementById('excelStats');
+
+            if (importedQuestions.length === 0) {
+                preview.style.display = 'none';
+                confirmBtn.disabled = true;
+                return;
+            }
+
+            const displayCount = Math.min(5, importedQuestions.length);
+            let html = '';
+            for (let i = 0; i < displayCount; i++) {
+                const q = importedQuestions[i];
+                html += `
+                    <tr style="border-bottom: 1px solid var(--border-color-light);">
+                        <td style="padding: 8px; font-size: 13px; color: var(--text-primary); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${q.question}">${q.question}</td>
+                        <td style="padding: 8px; font-size: 13px; color: var(--text-secondary); max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${q.referenceAnswer}">${q.referenceAnswer}</td>
+                    </tr>
+                `;
+            }
+
+            previewBody.innerHTML = html;
+            stats.textContent = `Total valid questions found: ${importedQuestions.length}`;
+            preview.style.display = 'block';
+            confirmBtn.disabled = false;
+        }
+
+        async function confirmImportExcel() {
+            if (importedQuestions.length === 0) return;
+
+            const now = Date.now();
+            const newQuestions = importedQuestions.map((q, index) => ({
+                id: Storage._generateId(),
+                question: q.question,
+                referenceAnswer: q.referenceAnswer,
+                createdAt: now + index
+            }));
+
+            for (const q of newQuestions) {
+                await Storage.addQuestion(q.question, q.referenceAnswer, q.id, q.createdAt);
+            }
+
+            closeImportExcelModal();
+            App.loadQuestions();
+            showToast(i18n.t('importSuccessToast', { count: newQuestions.length }));
+        }
+
+        async function confirmAddQuestion() {
+            const question = document.getElementById('modalQuestion').value.trim();
+            const referenceAnswer = document.getElementById('modalReferenceAnswer').value.trim();
+
+            if (question && referenceAnswer) {
+                await Storage.addQuestion(question, referenceAnswer);
+                closeAddQuestionModal();
+                App.loadQuestions();
+            } else {
+                alert(i18n.t('fillQuestionAndAnswer'));
+            }
+        }
+
+        function selectQuestion(questionId) {
+            App.selectQuestion(questionId);
+        }
+
+        async function deleteQuestion(id) {
+            if (confirm(i18n.t('deleteThisQuestion'))) {
+                await Storage.deleteQuestion(id);
+                App.loadQuestions();
+            }
+        }
+
+        function toggleReferenceAnswer() {
+            const refDiv = document.getElementById('practiceReference');
+            const toggleText = document.getElementById('refToggleText');
+            const toggleIcon = document.getElementById('refToggleIcon');
+
+            if (refDiv.style.display === 'none') {
+                refDiv.style.display = 'block';
+                toggleText.textContent = i18n.t('hide');
+                toggleIcon.textContent = '🙈';
+            } else {
+                refDiv.style.display = 'none';
+                toggleText.textContent = i18n.t('show');
+                toggleIcon.textContent = '👁️';
+            }
+        }
+
+        async function reopenWriting(id) {
+            const records = await Storage.getWritings();
+            const record = records.find(r => String(r.id) === String(id));
+            if (record) {
+                if (record.questionId) {
+                    App.selectQuestion(record.questionId);
+                    document.getElementById('practiceUserAnswer').value = record.userAnswer;
+                } else {
+                    const question = record.question || 'Untitled';
+                    const reference = record.referenceAnswer || '';
+                    const userAnswer = record.userAnswer || '';
+
+                    App.currentQuestion = {
+                        id: Date.now(),
+                        question,
+                        referenceAnswer: reference,
+                        createdAt: record.createdAt
+                    };
+
+                    document.getElementById('practiceQuestion').textContent = question;
+                    document.getElementById('practiceReference').textContent = reference;
+                    document.getElementById('practiceUserAnswer').value = userAnswer;
+
+                    document.getElementById('practiceEmptyState').style.display = 'none';
+                    document.getElementById('practiceContent').style.display = 'block';
+
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                    document.querySelector('.tab[data-page="practice"]').classList.add('active');
+                    document.getElementById('practice').classList.add('active');
+                }
+
+                const result = DiffEngine.compare(record.referenceAnswer, record.userAnswer);
+                const stats = DiffRenderer.calculateStats(result.operations, result.refWords ? result.refWords.length : result.diffResult.stats.totalCount);
+                const score = stats.totalCount > 0 ? Math.round((stats.matchedCount / stats.totalCount) * 100) : (record.diffResult ? record.diffResult.score : 0);
+
+                App.renderPracticeResults(result, stats, score);
+                document.getElementById('practiceResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        async function startApp() {
+            if (window.firebaseReady) {
+                App.init();
+            } else {
+                window.addEventListener('firebase-ready', () => App.init(), { once: true });
+            }
+        }
+        startApp();
+    </script>
+</body>
+</html>
