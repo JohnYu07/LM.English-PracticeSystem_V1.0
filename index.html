@@ -1545,10 +1545,16 @@
                     <h1>LM English Learning System</h1>
                     <p>Write, Review, Learn - Complete English Learning Loop</p>
                 </div>
-                <button id="themeToggle" class="btn btn-sm" title="Toggle Theme">
-                    <span id="themeIcon">🌓</span>
-                    <span id="themeLabel">Ink Mode</span>
-                </button>
+                <div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
+                    <button id="themeToggle" class="btn btn-sm" title="Toggle Theme">
+                        <span id="themeIcon">🌓</span>
+                        <span id="themeLabel">Ink Mode</span>
+                    </button>
+                    <button class="btn btn-sm" id="langToggleBtn" onclick="i18n.toggle()" title="Switch Language">
+                        <span>🌐</span>
+                        <span id="langToggleText" data-i18n="langToggle">EN/中</span>
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -1572,10 +1578,6 @@
             <button class="tab" data-page="flashcards">
                 <span>🎴</span>
                 <span data-i18n="tabFlashcards">Flashcards</span>
-            </button>
-            <button class="tab" id="langToggleBtn" onclick="i18n.toggle()" style="margin-left: auto;">
-                <span>🌐</span>
-                <span id="langToggleText" data-i18n="langToggle">中/EN</span>
             </button>
         </div>
 
@@ -2402,7 +2404,7 @@
                     wordAddedToast: 'Word added to vocabulary!',
                     practice: 'Practice',
                     words: 'words',
-                    langToggle: '中/EN',
+                    langToggle: 'EN/中',
                     // Dynamic alerts
                     pleaseEnterAnswer: 'Please enter your answer',
                     fillQuestionAndAnswer: 'Please fill both Question and Reference Answer',
@@ -2515,7 +2517,7 @@
                     wordAddedToast: '单词已添加到词汇表！',
                     practice: '练习',
                     words: '词',
-                    langToggle: 'EN/中',
+                    langToggle: '中/EN',
                     pleaseEnterAnswer: '请输入你的答案',
                     fillQuestionAndAnswer: '请填写题目和参考答案',
                     pleaseProvideMeaning: '请提供单词释义',
