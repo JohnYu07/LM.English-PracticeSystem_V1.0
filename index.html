@@ -824,10 +824,12 @@
         }
 
         .diff-text {
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
             font-size: 14px;
             line-height: 1.8;
-            white-space: pre-wrap;
-            word-break: break-word;
         }
 
         .diff-equal { color: var(--text-primary); }
@@ -2968,16 +2970,16 @@
             renderUnified(operations) {
                 return operations.map((op, idx) => {
                     if (op.type === 'equal') {
-                        return `<span class="diff-equal">${this.escapeHtml(op.value.value)}</span>`;
+                        return `<span class="diff-token correct">${this.escapeHtml(op.value.value)}</span>`;
                     } else if (op.type === 'delete') {
-                        return `<span class="diff-delete diff-word" onclick="openAddWordModal('${this.escapeHtml(op.value.value)}')">${this.escapeHtml(op.value.value)}</span>`;
+                        return `<span class="diff-token missing" onclick="openAddWordModal('${this.escapeHtml(op.value.value)}')"><span class="token-indicator">*</span>${this.escapeHtml(op.value.value)}</span>`;
                     } else if (op.type === 'insert') {
-                        return `<span class="diff-insert diff-word" onclick="openAddWordModal('${this.escapeHtml(op.value.value)}')">${this.escapeHtml(op.value.value)}</span>`;
+                        return `<span class="diff-token extra" onclick="openAddWordModal('${this.escapeHtml(op.value.value)}')">${this.escapeHtml(op.value.value)}</span>`;
                     } else if (op.type === 'replace') {
-                        return `<span class="diff-replace-delete diff-word" onclick="openAddWordModal('${this.escapeHtml(op.deleted.value)}')">${this.escapeHtml(op.deleted.value)}</span><span class="diff-replace-insert diff-word" onclick="openAddWordModal('${this.escapeHtml(op.inserted.value)}')">${this.escapeHtml(op.inserted.value)}</span>`;
+                        return `<span class="diff-token replace-delete" onclick="openAddWordModal('${this.escapeHtml(op.deleted.value)}')">${this.escapeHtml(op.deleted.value)}</span><span class="diff-token replace-insert" onclick="openAddWordModal('${this.escapeHtml(op.inserted.value)}')"><span class="token-indicator">+</span>${this.escapeHtml(op.inserted.value)}</span>`;
                     }
                     return '';
-                }).join(' ');
+                }).join('');
             },
 
             renderReference(operations) {
@@ -3760,28 +3762,6 @@
             if (detail) detail.classList.toggle('show');
         }
 
-        async function reopenWriting(id) {
-            const records = await Storage.getWritings();
-            const record = records.find(r => String(r.id) === String(id));
-            if (record) {
-                document.getElementById('question').value = record.question;
-                document.getElementById('referenceAnswer').value = record.referenceAnswer;
-                document.getElementById('userAnswer').value = record.userAnswer;
-
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-                document.querySelector('.tab[data-page="writing"]').classList.add('active');
-                document.getElementById('writing').classList.add('active');
-
-                const result = DiffEngine.compare(record.referenceAnswer, record.userAnswer);
-                const stats = DiffRenderer.calculateStats(result.operations, result.refWords.length);
-                const score = stats.totalCount > 0 ? Math.round((stats.matchedCount / stats.totalCount) * 100) : 0;
-
-                App.renderWritingResults(result, stats, score);
-                document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        }
-
         async function toggleVocabStatus(id) {
             const words = await Storage.getVocabulary();
             const word = words.find(w => String(w.id) === String(id));
@@ -4208,12 +4188,10 @@
             const record = records.find(r => String(r.id) === String(id));
             if (record) {
                 if (record.questionId) {
-                    App.selectQuestion(record.questionId);
-                    document.getElementById('practiceUserAnswer').value = record.userAnswer;
+                    await App.selectQuestion(record.questionId);
                 } else {
                     const question = record.question || 'Untitled';
                     const reference = record.referenceAnswer || '';
-                    const userAnswer = record.userAnswer || '';
 
                     App.currentQuestion = {
                         id: Date.now(),
@@ -4223,8 +4201,6 @@
                     };
 
                     document.getElementById('practiceQuestion').textContent = question;
-                    document.getElementById('practiceUserAnswer').value = userAnswer;
-
                     document.getElementById('practiceEmptyState').style.display = 'none';
                     document.getElementById('practiceContent').style.display = 'block';
 
@@ -4234,8 +4210,10 @@
                     document.getElementById('practice').classList.add('active');
                 }
 
+                document.getElementById('practiceUserAnswer').value = record.userAnswer || '';
+
                 const result = DiffEngine.compare(record.referenceAnswer, record.userAnswer);
-                const stats = DiffRenderer.calculateStats(result.operations, result.refWords ? result.refWords.length : result.diffResult.stats.totalCount);
+                const stats = DiffRenderer.calculateStats(result.operations, result.refWords ? result.refWords.length : record.diffResult.stats.totalCount);
                 const score = stats.totalCount > 0 ? Math.round((stats.matchedCount / stats.totalCount) * 100) : (record.diffResult ? record.diffResult.score : 0);
 
                 App.renderPracticeResults(result, stats, score);
