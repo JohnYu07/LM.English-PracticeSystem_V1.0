@@ -528,9 +528,9 @@
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0;
-            height: 50%;
+            height: 35%;
             border-radius: var(--radius) var(--radius) 0 0;
-            background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 100%);
             pointer-events: none;
         }
 
@@ -587,9 +587,9 @@
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0;
-            height: 50%;
+            height: 40%;
             border-radius: var(--radius) var(--radius) 0 0;
-            background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, transparent 100%);
+            background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 100%);
             pointer-events: none;
             z-index: 0;
         }
@@ -1035,9 +1035,12 @@
         .question-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 16px;
+            gap: 12px;
             max-height: calc(100vh - 200px);
             overflow-y: auto;
+            padding: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: calc(var(--radius) + 4px);
         }
 
         .question-card {
@@ -1063,9 +1066,9 @@
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0;
-            height: 40%;
+            height: 35%;
             border-radius: var(--radius) var(--radius) 0 0;
-            background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 100%);
             pointer-events: none;
         }
 
@@ -1215,8 +1218,11 @@
         .answer-cards {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            gap: 12px;
             margin-bottom: 20px;
+            padding: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: calc(var(--radius) + 4px);
         }
 
         .answer-card {
@@ -1238,9 +1244,9 @@
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0;
-            height: 40%;
+            height: 35%;
             border-radius: var(--radius) var(--radius) 0 0;
-            background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 100%);
             pointer-events: none;
         }
 
@@ -1454,9 +1460,9 @@
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0;
-            height: 50%;
+            height: 35%;
             border-radius: var(--radius) var(--radius) 0 0;
-            background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%);
+            background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, transparent 100%);
             pointer-events: none;
         }
 
@@ -1774,41 +1780,6 @@
         }
     </style>
 
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-        import { getFirestore, collection, doc, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteDoc, query, orderBy, where, serverTimestamp, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyD-0v6ssGvuTFXwReYHe1YVU570-q4B8-k",
-            authDomain: "lmenglish-power-byai-1.firebaseapp.com",
-            projectId: "lmenglish-power-byai-1",
-            storageBucket: "lmenglish-power-byai-1.firebasestorage.app",
-            messagingSenderId: "265120161906",
-            appId: "1:265120161906:web:530172b165876bf2e2a2eb"
-        };
-
-        // Initialize Firebase
-        const firebaseApp = initializeApp(firebaseConfig);
-        const db = getFirestore(firebaseApp);
-
-        // Expose to window immediately
-        window.db = db;
-        window.firebaseModules = {
-            collection, doc, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteDoc, query, orderBy, where, serverTimestamp
-        };
-
-        // Enable offline persistence (async, optional)
-        try {
-            await enableIndexedDbPersistence(db);
-        } catch (err) {
-            console.warn('Firestore persistence not enabled:', err.code);
-        }
-
-        // Signal that Firebase is ready
-        window.firebaseReady = true;
-        window.dispatchEvent(new Event('firebase-ready'));
     </script>
 </head>
 <body>
@@ -1835,12 +1806,12 @@
 
         <div class="tabs">
             <button class="tab active" data-page="home">
-                <span>🏠</span>
-                <span data-i18n="tabHome">Home</span>
-            </button>
-            <button class="tab" data-page="practice">
                 <span>✍️</span>
-                <span data-i18n="tabPractice">Practice</span>
+                <span data-i18n="tabHome">Practice</span>
+            </button>
+            <button class="tab" data-page="favorites">
+                <span>⭐</span>
+                <span data-i18n="tabFavorites">Favorites</span>
             </button>
             <button class="tab" data-page="history">
                 <span>📜</span>
@@ -1871,7 +1842,7 @@
                         <span>☁️</span>
                         <span data-i18n="gistSync">Gist Sync</span>
                     </button>
-                    <button class="btn btn-primary" onclick="openAddQuestionModal()">
+                    <button class="btn btn-secondary" onclick="openAddQuestionModal()">
                         <span>➕</span>
                         <span data-i18n="addQuestion">Add Question</span>
                     </button>
@@ -1886,12 +1857,20 @@
         </div>
 
         <div id="practice" class="page">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                <button class="btn btn-secondary btn-sm" onclick="switchToHome()">
+                    <span>←</span>
+                    <span data-i18n="back">Back</span>
+                </button>
+                <h2 style="font-size: 20px; font-weight: 700; color: var(--text-primary); margin: 0;" data-i18n="practice">Practice</h2>
+            </div>
+
             <div id="practiceEmptyState" class="empty-state" style="display: block;">
                 <div class="empty-state-icon">📝</div>
                 <div class="empty-state-title" data-i18n="selectQuestionFirst">Select a Question First</div>
                 <div class="empty-state-desc" data-i18n="selectQuestionDesc">Go to Home page and choose a question to practice</div>
                 <button class="btn btn-primary" style="margin-top: 16px;" onclick="switchToHome()">
-                    <span>🏠</span>
+                    <span>✍️</span>
                     <span data-i18n="goToQuestionBank">Go to Question Bank</span>
                 </button>
             </div>
@@ -2017,6 +1996,17 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div id="favorites" class="page">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <div>
+                    <h2 style="font-size: 22px; font-weight: 700; color: var(--text-primary);" data-i18n="favorites">Favorites</h2>
+                    <p style="font-size: 14px; color: var(--text-secondary); margin-top: 4px;" data-i18n="favoritesDesc">Your favorite questions</p>
+                </div>
+            </div>
+
+            <div id="favoritesList" class="question-grid"></div>
         </div>
 
         <div id="history" class="page">
@@ -2218,15 +2208,15 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label data-i18n="wordLabel">Word</label>
-                    <input type="text" id="editModalWord" readonly>
+                    <input type="text" id="editModalWord">
                 </div>
                 <div class="form-group">
                     <label data-i18n="meaningLabel">Meaning</label>
                     <input type="text" id="editModalMeaning" data-i18n-placeholder="meaningInputPlaceholder" placeholder="Enter word meaning">
                 </div>
                 <div class="form-group">
-                    <label data-i18n="chineseMeaningLabel">Chinese Meaning</label>
-                    <input type="text" id="editModalChineseMeaning" data-i18n-placeholder="chineseMeaningPlaceholder" placeholder="Enter Chinese meaning">
+                    <label data-i18n="noteLabel">Note</label>
+                    <input type="text" id="editModalChineseMeaning" data-i18n-placeholder="notePlaceholder" placeholder="Enter note">
                 </div>
                 <div class="form-group">
                     <label data-i18n="exampleLabel">Example</label>
@@ -2317,18 +2307,36 @@
                 return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
             },
 
-            async addQuestion(question, referenceAnswer, id = null, createdAt = null) {
+            async addQuestion(question, referenceAnswer, id = null, createdAt = null, favorite = false) {
                 const questions = this._getList(this.KEYS.questions);
                 const newQuestion = {
                     id: id || this._generateId(),
                     question,
                     referenceAnswer,
-                    createdAt: createdAt || Date.now()
+                    createdAt: createdAt || Date.now(),
+                    favorite: favorite || false
                 };
                 questions.push(newQuestion);
                 this._setList(this.KEYS.questions, questions);
                 this._cache.questions = null;
                 return newQuestion.id;
+            },
+
+            async toggleFavorite(id) {
+                const questions = this._getList(this.KEYS.questions);
+                const item = questions.find(q => String(q.id) === String(id));
+                if (item) {
+                    item.favorite = !item.favorite;
+                    this._setList(this.KEYS.questions, questions);
+                    this._cache.questions = null;
+                    return item.favorite;
+                }
+                return false;
+            },
+
+            async getFavorites() {
+                const questions = await this.getQuestions();
+                return questions.filter(q => q.favorite);
             },
 
             async getQuestions() {
@@ -2589,6 +2597,7 @@
                     selectQuestionFirst: 'Select a Question First',
                     selectQuestionDesc: 'Go to Home page and choose a question to practice',
                     goToQuestionBank: 'Go to Question Bank',
+                    back: 'Back',
                     prev: 'Prev',
                     next: 'Next',
                     question: 'Question',
@@ -2619,12 +2628,16 @@
                     shuffle: 'Shuffle',
                     markMastered: 'Mark Mastered',
                     nextCard: 'Next',
-                    tabHome: 'Home',
-                    tabPractice: 'Practice',
+                    tabHome: 'Practice',
+                    tabFavorites: 'Favorites',
                     tabHistory: 'History',
                     tabVocabulary: 'Vocabulary',
                     tabFlashcards: 'Flashcards',
                     addNewQuestion: 'Add New Question',
+                    favorites: 'Favorites',
+                    favoritesDesc: 'Your favorite questions',
+                    noFavorites: 'No Favorites Yet',
+                    noFavoritesDesc: 'Star questions to add them here',
                     questionLabel: 'Question',
                     questionModalPlaceholder: 'Enter the writing prompt or topic...',
                     referenceAnswerLabel: 'Reference Answer',
@@ -2647,11 +2660,11 @@
                     editWordToVocab: 'Edit Word',
                     wordLabel: 'Word',
                     meaningLabel: 'Meaning',
-                    chineseMeaningLabel: 'Chinese Meaning',
+                    noteLabel: 'Note',
                     exampleLabel: 'Example',
                     sourceLabel: 'Source',
                     meaningInputPlaceholder: 'Enter word meaning',
-                    chineseMeaningPlaceholder: 'Enter Chinese meaning',
+                    notePlaceholder: 'Enter note',
                     exampleInputPlaceholder: 'Enter example sentence',
                     addBtn: 'Add',
                     saveBtn: 'Save',
@@ -2672,6 +2685,7 @@
                     pleaseEnterAnswer: 'Please enter your answer',
                     fillQuestionAndAnswer: 'Please fill both Question and Reference Answer',
                     pleaseProvideMeaning: 'Please provide a meaning',
+                    pleaseProvideWordAndMeaning: 'Please provide word and meaning',
                     pleaseFillWordMeaning: 'Please fill at least Word and Meaning',
                     deleteThisQuestion: 'Are you sure you want to delete this question?',
                     deleteThisWord: 'Are you sure you want to delete this word?',
@@ -2680,7 +2694,6 @@
                     noHistoryToDelete: 'No history records to delete.',
                     wordAlreadyExists: 'Word already exists in vocabulary',
                     parseExcelFailed: 'Failed to parse Excel file: ',
-                    firebaseNotReady: 'Firebase is not ready yet. Please try again later.',
                     syncChoicePrompt: 'Click OK to upload local data to cloud.\nClick Cancel to download cloud data to local.',
                     syncToCloudToast: 'Synced to cloud: {q} questions, {w} writings, {v} words',
                     syncFromCloudToast: 'Synced from cloud: {q} questions, {w} writings, {v} words',
@@ -2707,6 +2720,7 @@
                     selectQuestionFirst: '请先选择一道题目',
                     selectQuestionDesc: '返回主页选择一道题目进行练习',
                     goToQuestionBank: '前往题库',
+                    back: '返回',
                     prev: '上一题',
                     next: '下一题',
                     question: '题目',
@@ -2737,12 +2751,16 @@
                     shuffle: '随机',
                     markMastered: '标记已掌握',
                     nextCard: '下一张',
-                    tabHome: '主页',
-                    tabPractice: '练习',
+                    tabHome: '练习',
+                    tabFavorites: '收藏',
                     tabHistory: '历史',
                     tabVocabulary: '词汇',
                     tabFlashcards: '卡片',
                     addNewQuestion: '添加新题目',
+                    favorites: '收藏',
+                    favoritesDesc: '你收藏的题目',
+                    noFavorites: '暂无收藏',
+                    noFavoritesDesc: '点击星标收藏题目',
                     questionLabel: '题目',
                     questionModalPlaceholder: '输入写作题目或话题...',
                     referenceAnswerLabel: '参考答案',
@@ -2765,11 +2783,11 @@
                     editWordToVocab: '编辑单词',
                     wordLabel: '单词',
                     meaningLabel: '释义',
-                    chineseMeaningLabel: '中文释义',
+                    noteLabel: '备注',
                     exampleLabel: '例句',
                     sourceLabel: '来源',
                     meaningInputPlaceholder: '输入单词释义',
-                    chineseMeaningPlaceholder: '输入中文释义',
+                    notePlaceholder: '输入备注',
                     exampleInputPlaceholder: '输入例句',
                     addBtn: '添加',
                     saveBtn: '保存',
@@ -2789,6 +2807,7 @@
                     pleaseEnterAnswer: '请输入你的答案',
                     fillQuestionAndAnswer: '请填写题目和参考答案',
                     pleaseProvideMeaning: '请提供单词释义',
+                    pleaseProvideWordAndMeaning: '请提供单词和释义',
                     pleaseFillWordMeaning: '请至少填写单词和释义',
                     deleteThisQuestion: '确定要删除这道题目吗？',
                     deleteThisWord: '确定要删除这个单词吗？',
@@ -2797,7 +2816,6 @@
                     noHistoryToDelete: '没有历史记录可删除',
                     wordAlreadyExists: '单词已存在于词汇表中',
                     parseExcelFailed: 'Excel文件解析失败：',
-                    firebaseNotReady: 'Firebase尚未准备好，请稍后再试',
                     syncChoicePrompt: '点击确定上传本地数据到云端\n点击取消从云端下载数据到本地',
                     syncToCloudToast: '同步到云端：{q} 道题目，{w} 条记录，{v} 个单词',
                     syncFromCloudToast: '从云端同步：{q} 道题目，{w} 条记录，{v} 个单词',
@@ -3148,6 +3166,8 @@
 
                         if (tab.dataset.page === 'home') {
                             this.loadQuestions();
+                        } else if (tab.dataset.page === 'favorites') {
+                            this.loadFavorites();
                         } else if (tab.dataset.page === 'flashcards') {
                             this.initFlashcards();
                         }
@@ -3279,6 +3299,9 @@
                                                 </div>
                                             </div>
                                             <div class="question-card-actions">
+                                                <button class="btn btn-sm ${q.favorite ? 'btn-warning' : 'btn-secondary'}" onclick="event.stopPropagation(); toggleFavorite('${q.id}')" title="${q.favorite ? 'Unfavorite' : 'Favorite'}">
+                                                    <span>${q.favorite ? '⭐' : '☆'}</span>
+                                                </button>
                                                 <button class="btn btn-primary btn-sm" onclick="selectQuestion('${q.id}')">
                                                     <span>✍️</span>
                                                     <span>${i18n.t('practice')}</span>
@@ -3296,6 +3319,52 @@
                 });
 
                 grid.innerHTML = html;
+            },
+
+            async loadFavorites() {
+                const questions = await Storage.getFavorites();
+                const grid = document.getElementById('favoritesList');
+
+                if (questions.length === 0) {
+                    grid.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1 / -1;">
+                            <div class="empty-state-icon">⭐</div>
+                            <div class="empty-state-title">${i18n.t('noFavorites')}</div>
+                            <div class="empty-state-desc">${i18n.t('noFavoritesDesc')}</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                grid.innerHTML = questions.map(q => {
+                    const date = new Date(q.createdAt);
+                    const dateStr = date.toLocaleDateString('en-US', {
+                        month: 'short', day: 'numeric', year: 'numeric'
+                    });
+                    return `
+                        <div class="question-card">
+                            <div class="question-card-content">
+                                <div class="question-card-title">${q.question}</div>
+                                <div class="question-card-meta">
+                                    <span>📅 ${dateStr}</span>
+                                    <span>📝 ${q.referenceAnswer.split(' ').length} ${i18n.t('words')}</span>
+                                </div>
+                            </div>
+                            <div class="question-card-actions">
+                                <button class="btn btn-sm btn-warning" onclick="event.stopPropagation(); toggleFavorite('${q.id}')" title="Unfavorite">
+                                    <span>⭐</span>
+                                </button>
+                                <button class="btn btn-primary btn-sm" onclick="selectQuestion('${q.id}')">
+                                    <span>✍️</span>
+                                    <span>${i18n.t('practice')}</span>
+                                </button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteQuestion('${q.id}')">
+                                    <span>🗑️</span>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
             },
 
             async selectQuestion(questionId, switchTab = true) {
@@ -3331,9 +3400,7 @@
                 document.getElementById('practiceTotalCount').textContent = '0';
 
                 if (switchTab) {
-                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
                     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-                    document.querySelector('.tab[data-page="practice"]').classList.add('active');
                     document.getElementById('practice').classList.add('active');
                 }
 
@@ -3791,17 +3858,18 @@
         }
 
         async function confirmEditWord() {
+            const word = document.getElementById('editModalWord').value.trim();
             const meaning = document.getElementById('editModalMeaning').value.trim();
             const chineseMeaning = document.getElementById('editModalChineseMeaning').value.trim();
             const example = document.getElementById('editModalExample').value.trim();
 
-            if (!meaning) {
-                alert(i18n.t('pleaseProvideMeaning'));
+            if (!word || !meaning) {
+                alert(i18n.t('pleaseProvideWordAndMeaning'));
                 return;
             }
 
             if (currentEditWordId) {
-                await Storage.updateVocab(currentEditWordId, { meaning, chineseMeaning, example });
+                await Storage.updateVocab(currentEditWordId, { word, meaning, chineseMeaning, example });
                 alert(i18n.t('wordUpdatedToast'));
                 closeEditWordModal();
                 App.loadVocabulary();
@@ -3958,23 +4026,44 @@
             App.loadQuestions();
         }
 
+        function switchToFavorites() {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelector('.tab[data-page="favorites"]').classList.add('active');
+            document.getElementById('favorites').classList.add('active');
+            App.loadFavorites();
+        }
+
         async function syncData() {
-            if (!window.firebaseReady || !window.db) {
-                alert(i18n.t('firebaseNotReady'));
+            const token = Storage.getSyncToken();
+            const gistId = Storage.getGistId();
+            
+            if (!token) {
+                openGistSyncModal();
                 return;
             }
-
+            
             const choice = confirm(i18n.t('syncChoicePrompt'));
             try {
                 if (choice) {
-                    const result = await Storage.syncToCloud();
-                    showToast(i18n.t('syncToCloudToast', { q: result.questions, w: result.writings, v: result.vocabulary }));
+                    const result = await Storage.syncToGist(token, gistId || null);
+                    if (!gistId) {
+                        Storage.setGistId(result.id);
+                    }
+                    const data = Storage.getAllData();
+                    showToast(i18n.t('syncToCloudToast', { q: data.questions.length, w: data.writings.length, v: data.vocabulary.length }));
                 } else {
-                    const result = await Storage.syncFromCloud();
+                    if (!gistId) {
+                        alert(i18n.t('pleaseEnterGistId'));
+                        openGistSyncModal();
+                        return;
+                    }
+                    const data = await Storage.syncFromGist(token, gistId);
+                    Storage.setAllData(data);
                     App.loadQuestions();
                     App.loadHistory();
                     App.loadVocabulary();
-                    showToast(i18n.t('syncFromCloudToast', { q: result.questions, w: result.writings, v: result.vocabulary }));
+                    showToast(i18n.t('syncFromCloudToast', { q: data.questions.length, w: data.writings.length, v: data.vocabulary.length }));
                 }
             } catch (error) {
                 console.error('Sync failed:', error);
@@ -4204,9 +4293,7 @@
                     document.getElementById('practiceEmptyState').style.display = 'none';
                     document.getElementById('practiceContent').style.display = 'block';
 
-                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
                     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-                    document.querySelector('.tab[data-page="practice"]').classList.add('active');
                     document.getElementById('practice').classList.add('active');
                 }
 
@@ -4221,12 +4308,14 @@
             }
         }
 
+        async function toggleFavorite(id) {
+            const isFav = await Storage.toggleFavorite(id);
+            App.loadQuestions();
+            if (App.loadFavorites) App.loadFavorites();
+        }
+
         async function startApp() {
-            if (window.firebaseReady) {
-                App.init();
-            } else {
-                window.addEventListener('firebase-ready', () => App.init(), { once: true });
-            }
+            App.init();
         }
         startApp();
     </script>
